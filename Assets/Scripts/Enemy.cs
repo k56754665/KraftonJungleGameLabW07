@@ -316,26 +316,26 @@ public class Enemy : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    Debug.Log("플레이어를 발견했습니다!");
+                    //Debug.Log("플레이어를 발견했습니다!");
                     lastPlayerPosition = hit.collider.transform.position; // 마지막으로 본 플레이어 위치 저장
                     currentState = EnemyState.Chasing; // 상태를 Chasing으로 변경
                 }
                 else if (hit.collider.CompareTag("Field Of View Object"))
                 {
                     // Field of View Object에 가로막힘
-                    Debug.Log("Field of View Object에 의해 가로막힘");
+                    //Debug.Log("Field of View Object에 의해 가로막힘");
                     // 장애물과의 거리로 Ray 길이 조정
-                    Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * hit.distance, UnityEngine.Color.red);
+                    //Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * hit.distance, UnityEngine.Color.red);
                 }
                 else
                 {
-                    Debug.Log("플레이어가 아닌 오브젝트에 닿았습니다: " + hit.collider.name);
+                    //Debug.Log("플레이어가 아닌 오브젝트에 닿았습니다: " + hit.collider.name);
                 }
             }
             else
             {
                 // 장애물에 부딪히지 않으면 원래 거리로 Ray그리기
-                Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * _viewDistance, UnityEngine.Color.red);
+                //Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * _viewDistance, UnityEngine.Color.red);
             }
         }
     }
