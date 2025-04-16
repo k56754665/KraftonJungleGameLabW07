@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(SpawnDeadZones());
         StartCoroutine(SpawnPatients());
 
-        player = GameObject.FindFirstObjectByType<Player>().gameObject;
+        player = GameObject.FindFirstObjectByType<PlayerController>().gameObject;
     }
 
     // Enemy Spawning: 20 units away from Player

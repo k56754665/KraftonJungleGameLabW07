@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     // 플레이어의 Transform
     [Header("Player transform")]
     public Transform player;
-    public Player playerPlayer;
+    public PlayerController playerPlayer;
     private Vector3 lastPlayerPosition; // 마지막으로 본 플레이어 위치
 
     [Header("Enemy Hp")]
@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerPlayer = GameObject.FindFirstObjectByType<Player>();
+        playerPlayer = GameObject.FindFirstObjectByType<PlayerController>();
         agentRotate = GetComponent<AgentRotateSmooth2d>();
         agent = GetComponent<NavMeshAgent>();
     }
@@ -323,7 +323,6 @@ public class Enemy : MonoBehaviour
                 else if (hit.collider.CompareTag("Field Of View Object"))
                 {
                     // Field of View Object에 가로막힘
-                    Debug.Log("Field of View Object에 의해 가로막힘");
                     // 장애물과의 거리로 Ray 길이 조정
                     Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * hit.distance, UnityEngine.Color.red);
                 }

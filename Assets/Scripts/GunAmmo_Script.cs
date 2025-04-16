@@ -7,17 +7,17 @@ public class GunAmmo_Script : MonoBehaviour
         Blue,
         Red
     }
-    public GunAmmoColor currentGunAmmoColor;
-    public Player player;
-    public Canvas_Script canvas;
+    GunAmmoColor currentGunAmmoColor;
+    PlayerFire _playerFire;
+    Canvas_Script _canvas;
     public ParticleSystem GetYouParticle;
 
     public int ammoPlusNum;
 
     private void Start()
     {
-        player = GameObject.FindFirstObjectByType<Player>();
-        canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
+        _playerFire = GameObject.FindFirstObjectByType<PlayerFire>();
+        _canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
     }
 
 
@@ -27,16 +27,16 @@ public class GunAmmo_Script : MonoBehaviour
         {
             if (currentGunAmmoColor == GunAmmoColor.Blue)
             {
-                player.blueGunNumber += ammoPlusNum;
+                _playerFire.blueGunNumber += ammoPlusNum;
                 Instantiate(GetYouParticle, transform.position, transform.rotation);
-                canvas.UpdateGunNumber(canvas.blueGunUINum, player.blueGunNumber);
+                _canvas.UpdateGunNumber(_canvas.blueGunUINum, _playerFire.blueGunNumber);
                 Destroy(this.gameObject);
             }
             else if (currentGunAmmoColor == GunAmmoColor.Red)
             {
-                player.redGunNumber += ammoPlusNum;
+                _playerFire.redGunNumber += ammoPlusNum;
                 Instantiate(GetYouParticle, transform.position, transform.rotation);
-                canvas.UpdateGunNumber(canvas.redGunUINum, player.redGunNumber);
+                _canvas.UpdateGunNumber(_canvas.redGunUINum, _playerFire.redGunNumber);
                 Destroy(this.gameObject);
             }
         }
