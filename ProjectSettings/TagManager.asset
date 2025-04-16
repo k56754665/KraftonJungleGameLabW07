@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - Wall
+  - Enemy
+  - Emergency Kit
+  - Patient
+  - Bullet
+  - Water
+  - Field Of View Object
+  - GunAmmo
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Field Of View Object
+  - Water
+  - UI
+  - Mask
+  - Behind Mask Enemy Silhouette
+  - Behind Mask NO S
+  - Black
+  - Soundwave
+  - Player
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Top
+    uniqueID: 3513036883
+    locked: 0
+  m_RenderingLayers:
+  - Default
