@@ -58,7 +58,7 @@ public class Soundwave_Script : MonoBehaviour
         // 적이 음파에 닿았을 때
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("들린다들린다~!");
+            //Debug.Log("들린다들린다~!");
 
             // 적 정보 가져온 후, 해당 적이 Checking 상태로 변함
             Enemy enemy = other.GetComponent<Enemy>();
