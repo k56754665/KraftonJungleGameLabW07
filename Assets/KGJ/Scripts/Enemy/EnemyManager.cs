@@ -7,12 +7,16 @@ public class EnemyManager : MonoBehaviour
     static EnemyManager _instance;
 
     Enemies _enemyRoot;
-    //List<GameObject> _enemies = new List<GameObject>(); // 모든 적 오브젝트를 List로 변경
     float _deleteDistance = 40f; // 비활성화 거리
 
     PlayerController _player;
 
-    Dictionary<Enemy, bool> _enemyStatus = new Dictionary<Enemy, bool>(); // 적 생존 상태를 저장할 딕셔너리
+    public Dictionary<Enemy, bool> EnemyStatus
+    {
+        get => new Dictionary<Enemy, bool>(_enemyStatus); // 얕은 복사본 반환
+        set { _enemyStatus = value; } // 값만 가져와야 함
+    }
+    Dictionary<Enemy, bool> _enemyStatus = new Dictionary<Enemy, bool>(); // 저장 시점의 적 생존 상태를 저장할 딕셔너리
 
     private void Awake()
     {
@@ -40,9 +44,11 @@ public class EnemyManager : MonoBehaviour
         Enemy[] _enemiesArray = _enemyRoot.GetComponentsInChildren<Enemy>();
         for (int i = 0; i < _enemiesArray.Length; i++)
         {
-            //_enemies.Add(_enemiesArray[i].gameObject); // 적 오브젝트를 리스트에 추가
             _enemyStatus.Add(_enemiesArray[i], true); // 적 생존 상태를 딕셔너리에 추가
         }
+
+        SavePointManager.Instance.OnLoadEvent += LoadEnemyStatus;
+        SavePointManager.Instance.OnSaveEvent += SaveEnemyStatus;
     }
 
     void Update()
@@ -65,34 +71,38 @@ public class EnemyManager : MonoBehaviour
                 }
             }
         }
-        // 적 상태 업데이트
-        /*for (int i = _enemies.Count - 1; i >= 0; i--) // 역방향으로 순회
-        {
-            if (_enemies[i] != null) // 적이 파괴되지 않았을 경우
-            {
-                Enemy enemyController = _enemies[i].GetComponent<Enemy>();
-                if (enemyController != null)
-                {
-                    enemyController.NavMeshEnemyOnOff(_player.transform, _deleteDistance);
-                }
-            }
-            else
-            {
-                // 적이 파괴된 경우 리스트에서 제거
-                _enemies.RemoveAt(i);
-            }
-        }*/
     }
 
-    // TODO : Enemy 딕셔너리에 특정 적을 false로 바꾸는 함수
-    public void UpdateEnemyStatus(Enemy enemy, bool status)
+    /// <summary>
+    /// 죽은 적의 상태를 딕셔너리에 반영해주는 함수
+    /// </summary>
+    public void AddDeadEnemyStatus(Enemy enemy)
     {
         Debug.Log(enemy.name + " Dead");
-        _enemyStatus[enemy] = status;
-        if (status)
+        _enemyStatus[enemy] = false;
+    }
+
+    /// <summary>
+    /// 세이브 포인트에 현재 적의 생존 현황을 저장하는 함수
+    /// </summary>
+    public void SaveEnemyStatus()
+    {
+        SavePointManager.Instance.SaveEnemyStatus = EnemyStatus;
+    }
+
+    /// <summary>
+    /// 적의 생존 현황을 세이브 포인트에 저장된 값으로 변경해주는 함수
+    /// </summary>
+    public void LoadEnemyStatus()
+    {
+        EnemyStatus = SavePointManager.Instance.SaveEnemyStatus;
+        // 세이브 포인트 시점의 적 생존 현황을 게임 오브젝트 활성화에 적용
+        foreach (var enemy in _enemyStatus.Keys)
         {
-            // 적을 살리는 로직
-            enemy.Respawn();
+            if (_enemyStatus[enemy])
+            {
+                enemy.gameObject.SetActive(true);
+            }
         }
     }
 

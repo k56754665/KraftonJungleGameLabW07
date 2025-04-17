@@ -270,9 +270,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7553293588983531643}
-  - component: {fileID: 5096626892557838433}
   - component: {fileID: 8886664948003956292}
   - component: {fileID: 6989784942165111701}
+  - component: {fileID: 2386093634042193386}
+  - component: {fileID: 5213263641823448125}
+  - component: {fileID: 743233478044553980}
+  - component: {fileID: 1514308600191625311}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -309,41 +312,6 @@ Transform:
   - {fileID: 4466018058602996274}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5096626892557838433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732701868248471681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3795de1fb1b134a41a7698380fc82a2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  movespeed: 5
-  hp: 3
-  maxHp: 3
-  gun: {fileID: 6462777158864582031}
-  currentGunType: 0
-  firePoint: {fileID: 5039706649031130900}
-  blueGunNumber: 10
-  redGunNumber: 10
-  canvas: {fileID: 0}
-  gameManager: {fileID: 0}
-  deathParticle: {fileID: 5347658223564051670, guid: 122b11e1f441d714f89365a8423ccf9d, type: 3}
-  healParticle: {fileID: 5347658223564051670, guid: 5389b238fd9502440846dce26c9a3c1f, type: 3}
-  playerRb: {fileID: 8886664948003956292}
-  fieldOfView: {fileID: 0}
-  soundwaveWalk: {fileID: 2981080032049220416, guid: 1860c01d692ec444cb91d3ecc5ffcb56, type: 3}
-  soundwaveRun: {fileID: 2981080032049220416, guid: 9d7f89421504afb43bd16a1fd1ed6347, type: 3}
-  soundwaveBlueGun: {fileID: 2981080032049220416, guid: 9b4929e308b391d479b2eec0d1dbbee9, type: 3}
-  soundwaveRedGun: {fileID: 2981080032049220416, guid: e8d65e7022c148a4993b9b3221ca8781, type: 3}
-  targetPatient: {fileID: 0}
-  isCanSave: 0
-  stamina: 99999
-  holdKeyTime: 0
 --- !u!50 &8886664948003956292
 Rigidbody2D:
   serializedVersion: 5
@@ -407,6 +375,66 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.8
+--- !u!114 &2386093634042193386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732701868248471681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e6595a88281abf4985e9f342104950e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathParticle: {fileID: 5347658223564051670, guid: 122b11e1f441d714f89365a8423ccf9d, type: 3}
+  fieldOfView: {fileID: 0}
+  hp: 3
+  maxHp: 3
+--- !u!114 &5213263641823448125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732701868248471681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c926b334a8aabbd40827b0e8037c1c73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gun: {fileID: 6462777158864582031}
+  soundwaveBlueGun: {fileID: 2981080032049220416, guid: 9b4929e308b391d479b2eec0d1dbbee9, type: 3}
+  soundwaveRedGun: {fileID: 2981080032049220416, guid: e8d65e7022c148a4993b9b3221ca8781, type: 3}
+  blueGunNumber: 20
+  redGunNumber: 20
+--- !u!114 &743233478044553980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732701868248471681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 366117d4d67c2854c870080ea9255271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundwaveWalk: {fileID: 2981080032049220416, guid: 1860c01d692ec444cb91d3ecc5ffcb56, type: 3}
+  soundwaveRun: {fileID: 2981080032049220416, guid: 9d7f89421504afb43bd16a1fd1ed6347, type: 3}
+--- !u!114 &1514308600191625311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732701868248471681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 983cc6e9abaf8e540b41b5f47eb36dd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healParticle: {fileID: 5347658223564051670, guid: 5389b238fd9502440846dce26c9a3c1f, type: 3}
 --- !u!1 &3845376938114112903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,6 +1060,8 @@ MonoBehaviour:
   bullet: {fileID: 5029610912062255231, guid: 6eb1591d4b32d2343aa5c90df3766343, type: 3}
   blueBullet: {fileID: 5029610912062255231, guid: c3d8fcbfa4271e94dbab6f412af56ed0, type: 3}
   redBullet: {fileID: 5029610912062255231, guid: 241ba4b9425641849a68fde6a9b99f73, type: 3}
+  _blueGunRandom: 5
+  _redGunRandom: 10
 --- !u!1 &6537365494544272756
 GameObject:
   m_ObjectHideFlags: 0
