@@ -18,16 +18,16 @@ public class InputManager : MonoBehaviour
     public Action runAction;
     public Action stopRunAction;
     public Action<Vector2> changeWeaponAction;
-    public Action holdFocusAction;
-    public Action stopHoldFocusAction;
 
     Vector2 _moveInput;
     Vector2 _changeWeaponInput;
     Vector2 _pointerMoveInput;
+    bool _isFocusing; 
 
     public Vector2 MoveInput => _moveInput;
     public Vector2 ChangeWeaponInput => _changeWeaponInput;
     public Vector2 PointerMoveInput => _pointerMoveInput;
+    public bool IsFocusing => _isFocusing;
 
 
     void Awake()
@@ -121,11 +121,11 @@ public class InputManager : MonoBehaviour
     {
         if (context.performed)
         {
-            holdFocusAction?.Invoke();
+            _isFocusing = true;
         }
         else if (context.canceled)
         {
-            stopHoldFocusAction?.Invoke();
+            _isFocusing = false;
         }
     }
 

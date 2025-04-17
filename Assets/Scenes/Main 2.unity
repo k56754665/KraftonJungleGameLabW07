@@ -10584,6 +10584,7 @@ GameObject:
   - component: {fileID: 1552909558}
   - component: {fileID: 1552909557}
   - component: {fileID: 1552909556}
+  - component: {fileID: 1552909559}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -10668,6 +10669,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1552909559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552909555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09c97428fa0be5848b383b47cc57118e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _zoomInLensSize: 10
+  _zoomOutLensSize: 14
+  _zoomSpeed: 5
 --- !u!1001 &1562128382
 PrefabInstance:
   m_ObjectHideFlags: 0
