@@ -9529,6 +9529,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2386093634042193386, guid: b15e4d0d47601b44885defb10d377c0e, type: 3}
+      propertyPath: fieldOfView
+      value: 
+      objectReference: {fileID: 1212271053}
     - target: {fileID: 2732701868248471681, guid: b15e4d0d47601b44885defb10d377c0e, type: 3}
       propertyPath: m_Name
       value: Player
@@ -9599,6 +9603,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5096626892557838433, guid: b15e4d0d47601b44885defb10d377c0e, type: 3}
+    - {fileID: 2386093634042193386, guid: b15e4d0d47601b44885defb10d377c0e, type: 3}
+    - {fileID: 5213263641823448125, guid: b15e4d0d47601b44885defb10d377c0e, type: 3}
+    - {fileID: 743233478044553980, guid: b15e4d0d47601b44885defb10d377c0e, type: 3}
+    - {fileID: 1514308600191625311, guid: b15e4d0d47601b44885defb10d377c0e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -9632,8 +9640,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6595a88281abf4985e9f342104950e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _targetType: 0
   deathParticle: {fileID: 5347658223564051670, guid: 122b11e1f441d714f89365a8423ccf9d, type: 3}
   fieldOfView: {fileID: 1212271053}
+  _target: {fileID: 0}
   hp: 3
   maxHp: 3
 --- !u!114 &1430496664
@@ -13447,6 +13457,10 @@ PrefabInstance:
     - target: {fileID: 2998060730676484021, guid: 825fe72e009f6e54190dbd171d4f704d, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2998060730676484021, guid: 825fe72e009f6e54190dbd171d4f704d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7278064935111788650, guid: 825fe72e009f6e54190dbd171d4f704d, type: 3}
       propertyPath: m_Pivot.x

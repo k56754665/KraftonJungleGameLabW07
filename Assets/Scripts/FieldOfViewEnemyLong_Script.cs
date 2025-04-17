@@ -41,16 +41,17 @@ public class FieldOfViewEnemyLong_Script : MonoBehaviour
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, UtilsClass.GetVectorFromAngle(angle), viewDistance, layerMask);
+            Vector3 direction = UtilsClass.GetVectorFromAngle(angle);
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, direction, viewDistance, layerMask);
 
             if (raycastHit2D.collider == null)
             {
-                // 장애물 안 부딪힘
-                vertex = origin + UtilsClass.GetVectorFromAngle(angle) * viewDistance;
+                // 장애물 없음
+                vertex = origin + direction * viewDistance;
             }
             else
             {
-                // 장애물과 닿음
+                // 장애물과 충돌
                 vertex = raycastHit2D.point;
             }
             vertices[vertexIndex] = vertex;
@@ -65,7 +66,7 @@ public class FieldOfViewEnemyLong_Script : MonoBehaviour
             }
 
             vertexIndex++;
-            angle -= angleIncrease;
+            angle += angleIncrease; // 시계 방향으로 각도 증가
         }
 
         mesh.vertices = vertices;
@@ -83,7 +84,9 @@ public class FieldOfViewEnemyLong_Script : MonoBehaviour
 
     public void SetAimDirection(Vector3 _aimDirection)
     {
-        startingAngle = UtilsClass.GetAngleFromVectorFloat(_aimDirection) - fov / 2f;
+        // _aimDirection을 정규화하고, 각도를 계산
+        _aimDirection.Normalize();
+        startingAngle = UtilsClass.GetAngleFromVectorFloat(_aimDirection) + fov / 2f; // 시작 각도를 시야의 왼쪽 끝으로 설정
     }
 
     public void FoVTurnOnOff(bool _bool)

@@ -277,22 +277,16 @@ public class Enemy : MonoBehaviour
 
     public void FOVUpdate()
     {
-        // 적의 현재 각도를 가져와 시야각을 업데이트
-        float currentAngle = transform.eulerAngles.z;
-
-        // 시야각의 시작과 끝 각도 계산
-        float wideFOVStartAngle = currentAngle - wideFov / 2;
-        float wideFOVEndAngle = currentAngle + wideFov / 2;
-        float longFOVStartAngle = currentAngle - longFov / 2;
-        float longFOVEndAngle = currentAngle + longFov / 2;
+        // 적의 현재 방향 벡터 (transform.up: 위쪽, transform.right: 오른쪽)
+        Vector3 aimDirection = transform.up; // 2D에서 위쪽(Y축)을 기준으로
 
         // Wide FOV 설정
-        fieldOfViewEnemyWide.SetAimDirection(UtilsClass.GetVectorFromAngle(wideFOVStartAngle + 90 + wideFov * 2 - wideFov / 2)); // 각도 보정 추가
-        fieldOfViewEnemyWide.SetOrigin(this.transform.position);
+        fieldOfViewEnemyWide.SetAimDirection(aimDirection);
+        fieldOfViewEnemyWide.SetOrigin(transform.position);
 
         // Long FOV 설정
-        fieldOfViewEnemyLong.SetAimDirection(UtilsClass.GetVectorFromAngle(longFOVStartAngle + 90 + longFov * 2 - longFov / 2)); // 각도 보정 추가
-        fieldOfViewEnemyLong.SetOrigin(this.transform.position);
+        fieldOfViewEnemyLong.SetAimDirection(aimDirection);
+        fieldOfViewEnemyLong.SetOrigin(transform.position);
     }
 
     void ChangeSpeed(float _linearSpeed, float _angularSpeed)
