@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class Heart_Script : MonoBehaviour
 {
-    public Player player;
+    public PlayerController player;
 
     public GameObject[] pinkHearts; // 분홍 하트 오브젝트 배열
     public GameObject[] grayHearts; // 회색 하트 오브젝트 배열
 
     void Start()
     {
-        player = GameObject.FindFirstObjectByType<Player>();
+        player = GameObject.FindFirstObjectByType<PlayerController>();
         UpdateHearts(); // 하트 상태 업데이트
     }
 

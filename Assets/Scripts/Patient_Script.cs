@@ -7,13 +7,10 @@ public class Patient_Script : MonoBehaviour
     public GameObject PressE_UI;
     public GameObject fill;
 
-    public int issaving = 1;
-
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         showUIDistance = 10;
-        issaving = 1;
     }
 
     private void Update()

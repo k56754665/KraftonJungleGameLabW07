@@ -2,19 +2,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Prefabs")]
-    public Player player;
-    public Transform playerTransform;
+    public PlayerController player;
     public Canvas_Script canvas;
     private TextMeshProUGUI timerText;
-
-    [Header("Enemy Manager")]
-    public List<GameObject> enemies = new List<GameObject>(); // 모든 적 오브젝트를 List로 변경
-    float deleteDistance = 40f; // 비활성화 거리
 
     [Header("Game System")]
     public bool isgameover = false;
@@ -26,7 +20,7 @@ public class GameManager : MonoBehaviour
     {
         timeRemaining = startingTime; // 남은 시간 초기화
 
-        player = GameObject.FindFirstObjectByType<Player>();
+        player = GameObject.FindFirstObjectByType<PlayerController>();
         canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
         timerText = canvas.timer.GetComponent<TextMeshProUGUI>();
         canvas.GetComponent<Canvas_Script>().gameOver.SetActive(false);
@@ -34,24 +28,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // 적 상태 업데이트
-        for (int i = enemies.Count - 1; i >= 0; i--) // 역방향으로 순회
-        {
-            if (enemies[i] != null) // 적이 파괴되지 않았을 경우
-            {
-                Enemy enemyController = enemies[i].GetComponent<Enemy>();
-                if (enemyController != null)
-                {
-                    enemyController.NavMeshEnemyOnOff(playerTransform, deleteDistance);
-                }
-            }
-            else
-            {
-                // 적이 파괴된 경우 리스트에서 제거
-                enemies.RemoveAt(i);
-            }
-        }
-
         // 남은 시간이 0보다 큰 경우에만 감소
         if (timeRemaining > 0 && !isgameover)
         {
@@ -73,6 +49,7 @@ public class GameManager : MonoBehaviour
 
     public void Gameover()
     {
+        if (player == null) return;
         Destroy(player.gameObject);
         StartCoroutine(DelayedGameOverActions());
     }

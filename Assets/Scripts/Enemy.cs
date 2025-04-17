@@ -10,13 +10,14 @@ public class Enemy : MonoBehaviour
     // 플레이어의 Transform
     [Header("Player transform")]
     public Transform player;
-    public Player playerPlayer;
+    public PlayerController playerPlayer;
     private Vector3 lastPlayerPosition; // 마지막으로 본 플레이어 위치
 
     [Header("Enemy Hp")]
     public int hp;
     public float stunDuration;
     private bool isStunned = false;
+    private int maxHp;
 
     // 적 기본 총알
     [Header("Bullet")]
@@ -90,32 +91,41 @@ public class Enemy : MonoBehaviour
     private Vector3 walkPoint;
     private bool isWalkPointSet;
 
-
-
-
-
-
-
+    Vector3 _initPosition;
+    GameObject _soundwaveRun; // 프리팹
+    GameObject _soundwaveRunGameObject; // 생성된 게임 오브젝트
 
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerPlayer = GameObject.FindFirstObjectByType<Player>();
+        playerPlayer = GameObject.FindFirstObjectByType<PlayerController>();
         agentRotate = GetComponent<AgentRotateSmooth2d>();
         agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
+        // soundwaveRun Prefab 로드
+        _soundwaveRun = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveRun");
+
         // 처음 인덱스를 0으로 설정, 처음에는 이동하지 않음
         currentZoneMovePointIndex = 0;
         isWalkingToZoneMovePoint = false;
+
+        _initPosition = transform.position;
+        maxHp = hp;
 
         FOVStart();
     }
 
     void Update()
     {
+        if (player == null || agent == null)
+        {
+            StopAllCoroutines();
+            return;
+        }
+
         FOVUpdate();
 
         BeingAssassinate();
@@ -236,6 +246,7 @@ public class Enemy : MonoBehaviour
     {
         // Field of View Wide 오브젝트 생성
         GameObject fovObjectWide = Instantiate(fieldOfViewEnemyPrefabWide, Vector2.zero, Quaternion.identity);
+        
         // 임시 코드 
         //fovObjectWide.transform.SetParent(transform); // 적의 자식으로 설정
         //fovObjectWide.transform.localPosition = Vector3.zero; // 적의 위치에 맞게 설정
@@ -247,6 +258,7 @@ public class Enemy : MonoBehaviour
 
         // Field of View Long 오브젝트 생성
         GameObject fovObjectLong = Instantiate(fieldOfViewEnemyPrefabLong, Vector2.zero, Quaternion.identity);
+
         // 임시 코드 
         //fovObjectLong.transform.SetParent(transform); // 적의 자식으로 설정
         //fovObjectLong.transform.localPosition = Vector3.zero; // 적의 위치에 맞게 설정
@@ -319,6 +331,12 @@ public class Enemy : MonoBehaviour
                     //Debug.Log("플레이어를 발견했습니다!");
                     lastPlayerPosition = hit.collider.transform.position; // 마지막으로 본 플레이어 위치 저장
                     currentState = EnemyState.Chasing; // 상태를 Chasing으로 변경
+
+                    // TODO : 주변 적에게 알림
+                    if (_soundwaveRunGameObject == null)
+                    {
+                        _soundwaveRunGameObject = Instantiate(_soundwaveRun, transform.position, transform.rotation);
+                    }
                 }
                 else if (hit.collider.CompareTag("Field Of View Object"))
                 {
@@ -403,6 +421,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void ChasePlayer()
     {
+        
+
+
         agent.SetDestination(lastPlayerPosition); // 마지막으로 본 위치로 이동
 
         // 마지막 위치에 도착했는지 확인
@@ -627,7 +648,20 @@ public class Enemy : MonoBehaviour
         fieldOfViewEnemyWide.DestroyFOV();
         fieldOfViewEnemyLong.DestroyFOV();
         Instantiate(RedDamagedParticle, transform.position, transform.rotation);
-        Destroy(gameObject);
+
+        // TODO : Destroy 대신 SetActive(false)로 비활성화, EnemyManager의 딕셔너리에 사망 현황 업데이트
+        gameObject.SetActive(false);
+        EnemyManager.Instance.UpdateEnemyStatus(this, false);
+        //Destroy(gameObject);
     }
 
+    /// <summary>
+    /// FOV 재생성, 적 위치 초기화, 체력 초기화
+    /// </summary>
+    public void Respawn()
+    {
+        FOVStart();
+        transform.position = _initPosition;
+        hp = maxHp;
+    }
 }
