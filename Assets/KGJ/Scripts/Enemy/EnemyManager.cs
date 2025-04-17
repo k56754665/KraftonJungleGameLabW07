@@ -10,7 +10,7 @@ public class EnemyManager : MonoBehaviour
     //List<GameObject> _enemies = new List<GameObject>(); // 모든 적 오브젝트를 List로 변경
     float _deleteDistance = 40f; // 비활성화 거리
 
-    Player _player;
+    PlayerController _player;
 
     Dictionary<Enemy, bool> _enemyStatus = new Dictionary<Enemy, bool>(); // 적 생존 상태를 저장할 딕셔너리
 
@@ -35,7 +35,7 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        _player = GameObject.FindFirstObjectByType<Player>();
+        _player = GameObject.FindFirstObjectByType<PlayerController>();
         _enemyRoot = FindAnyObjectByType<Enemies>();
         Enemy[] _enemiesArray = _enemyRoot.GetComponentsInChildren<Enemy>();
         for (int i = 0; i < _enemiesArray.Length; i++)

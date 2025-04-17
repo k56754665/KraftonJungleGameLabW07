@@ -47,8 +47,6 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        // 마우스 휠 스크롤 시 총 변경
-        _playerShooting.CheckMouseWheel();
 
         SetHealth();
 

@@ -27,17 +27,18 @@ public class PlayerFire : MonoBehaviour
 
         currentGunType = GunType.BlueGun; // 초기 총 종류 설정
         InputManager.Instance.fireAction += PlayerGunFire; // 총 발사
+        InputManager.Instance.changeWeaponAction += CheckMouseWheel; // 총 변경
 
     }
 
-    public void CheckMouseWheel()
+    public void CheckMouseWheel(Vector2 vector)
     {
-        if (InputManager.Instance.ChangeWeaponInput.y > 0f) // 위로 스크롤
+        if (vector.y > 0f) // 위로 스크롤
         {
             SwitchGun(1);
             Debug.Log("Current Gun: " + currentGunType);
         }
-        else if (InputManager.Instance.ChangeWeaponInput.y < 0f) // 아래로 스크롤
+        else if (vector.y < 0f) // 아래로 스크롤
         {
             SwitchGun(-1);
             Debug.Log("Current Gun: " + currentGunType);

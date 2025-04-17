@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     // 플레이어의 Transform
     [Header("Player transform")]
     public Transform player;
-    public Player playerPlayer;
+    public PlayerController playerPlayer;
     private Vector3 lastPlayerPosition; // 마지막으로 본 플레이어 위치
 
     [Header("Enemy Hp")]
@@ -98,7 +98,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerPlayer = GameObject.FindFirstObjectByType<Player>();
+        playerPlayer = GameObject.FindFirstObjectByType<PlayerController>();
         agentRotate = GetComponent<AgentRotateSmooth2d>();
         agent = GetComponent<NavMeshAgent>();
     }

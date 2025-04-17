@@ -6,7 +6,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     [Header("Prefabs")]
-    public Player player;
+    public PlayerController player;
     public Canvas_Script canvas;
     private TextMeshProUGUI timerText;
 
@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     {
         timeRemaining = startingTime; // 남은 시간 초기화
 
-        player = GameObject.FindFirstObjectByType<Player>();
+        player = GameObject.FindFirstObjectByType<PlayerController>();
         canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
         timerText = canvas.timer.GetComponent<TextMeshProUGUI>();
         canvas.GetComponent<Canvas_Script>().gameOver.SetActive(false);

@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     public Action holdInteractionAction;
     public Action runAction;
     public Action stopRunAction;
+    public Action<Vector2> changeWeaponAction;
 
     Vector2 _moveInput;
     Vector2 _changeWeaponInput;
@@ -104,7 +105,7 @@ public class InputManager : MonoBehaviour
     {
         if (context.performed)
         {
-            _changeWeaponInput = context.ReadValue<Vector2>();
+            changeWeaponAction?.Invoke(context.ReadValue<Vector2>());
         }
         
     }
