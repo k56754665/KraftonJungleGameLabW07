@@ -1,5 +1,4 @@
 using UnityEngine;
-using static PlayerController;
 using System.Collections;
 using Define;
 
@@ -38,6 +37,9 @@ public class PlayerInteraction : MonoBehaviour
                     break;
                 case Target.Enemy:
                     Assassinate(_playerController.CurrentTarget);
+                    break;
+                case Target.Object:
+                    _playerController.CurrentTarget.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
                     break;
             }
         }
@@ -143,6 +145,12 @@ public class PlayerInteraction : MonoBehaviour
             pressE_UI.enabled = false;
             _playerController.CurrentTarget = null;
         }
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.interactionAction -= PlayerInteractionAction;
+        InputManager.Instance.holdInteractionAction -= PlayerHoldInteractionAction;
     }
 }
 

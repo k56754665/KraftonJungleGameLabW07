@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class PlayerFire : MonoBehaviour
@@ -6,7 +5,8 @@ public class PlayerFire : MonoBehaviour
     public enum GunType
     {
         BlueGun,
-        RedGun
+        RedGun,
+        Can
     }
 
     Canvas_Script _canvas;
@@ -15,15 +15,20 @@ public class PlayerFire : MonoBehaviour
     [SerializeField] GameObject gun;
     [SerializeField] GameObject soundwaveBlueGun;
     [SerializeField] GameObject soundwaveRedGun;
+    GameObject _can; // Can Prefab
+    GameObject _canObject;
 
     public int blueGunNumber;
     public int redGunNumber;
+    
 
     void Start()
     {
         _canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
         _canvas.UpdateGunNumber(_canvas.blueGunUINum, blueGunNumber);
         _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
+
+         _can = Resources.Load<GameObject>("Prefabs/KGJ/Can"); // Can Prefab 로드
 
         currentGunType = GunType.BlueGun; // 초기 총 종류 설정
         InputManager.Instance.fireAction += PlayerGunFire; // 총 발사
@@ -35,6 +40,11 @@ public class PlayerFire : MonoBehaviour
 
     public void CheckMouseWheel(Vector2 vector)
     {
+        if (currentGunType == GunType.Can) // 오브젝트를 들고 있는 상태
+        {
+            return;
+        }
+
         if (vector.y > 0f) // 위로 스크롤
         {
             SwitchGun(1);
@@ -56,27 +66,47 @@ public class PlayerFire : MonoBehaviour
         // 현재 총 HUD 변경
         if (currentGunType == GunType.BlueGun)
         {
+            _canvas.HideCanImage();
             _canvas.TurnOff(_canvas.redGunUI);
             _canvas.TurnOn(_canvas.blueGunUI);
             _canvas.UpdateGunNumber(_canvas.blueGunUINum, blueGunNumber);
         }
         else if (currentGunType == GunType.RedGun)
         {
+            _canvas.HideCanImage();
             _canvas.TurnOff(_canvas.blueGunUI);
             _canvas.TurnOn(_canvas.redGunUI);
             _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
         }
     }
 
+    public void SetCurrentCan()
+    {
+        currentGunType = GunType.Can; // 오브젝트를 들고 있는 상태
+        _canvas.ShowCanImage();
+        _canvas.TurnOff(_canvas.redGunUI);
+        _canvas.TurnOff(_canvas.blueGunUI);
+    }
+
     public void PlayerGunFire()
     {
-        if (currentGunType == GunType.BlueGun && blueGunNumber > 0)
+        if (currentGunType == GunType.Can)
+        {
+            // TODO : can을 던지는 로직
+            _canObject = Instantiate(_can, transform.position, transform.rotation);
+            _canObject.GetComponent<Can>().Throw();
+            _canvas.HideCanImage();
+            currentGunType = GunType.BlueGun;
+            _canvas.TurnOff(_canvas.redGunUI);
+            _canvas.TurnOn(_canvas.blueGunUI);
+            _canvas.UpdateGunNumber(_canvas.blueGunUINum, blueGunNumber);
+        }
+        else if (currentGunType == GunType.BlueGun && blueGunNumber > 0)
         {
             gun.GetComponent<Gun>().BlueGunFire();
             Instantiate(soundwaveBlueGun, transform.position, transform.rotation);
             blueGunNumber -= 1;
             _canvas.UpdateGunNumber(_canvas.blueGunUINum, blueGunNumber);
-            Debug.Log("총 발사!");
         }
         else if (currentGunType == GunType.RedGun && redGunNumber > 0)
         {
@@ -84,7 +114,6 @@ public class PlayerFire : MonoBehaviour
             Instantiate(soundwaveRedGun, transform.position, transform.rotation);
             redGunNumber -= 1;
             _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
-            Debug.Log("총 발사!2");
         }
     }
 
@@ -104,5 +133,13 @@ public class PlayerFire : MonoBehaviour
     {
         blueGunNumber = SavePointManager.Instance.SaveBlueGunNumber;
         redGunNumber = SavePointManager.Instance.SaveRedGunNumber;
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.fireAction -= PlayerGunFire; // 총 발사
+        InputManager.Instance.changeWeaponAction -= CheckMouseWheel; // 총 변경
+        SavePointManager.Instance.OnSaveEvent -= SavePointFire;
+        SavePointManager.Instance.OnLoadEvent -= LoadSavePointFire;
     }
 }
