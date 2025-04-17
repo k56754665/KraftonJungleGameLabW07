@@ -22,10 +22,12 @@ public class InputManager : MonoBehaviour
     Vector2 _moveInput;
     Vector2 _changeWeaponInput;
     Vector2 _pointerMoveInput;
+    bool _isFocusing; 
 
     public Vector2 MoveInput => _moveInput;
     public Vector2 ChangeWeaponInput => _changeWeaponInput;
     public Vector2 PointerMoveInput => _pointerMoveInput;
+    public bool IsFocusing => _isFocusing;
 
 
     void Awake()
@@ -52,6 +54,8 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.ChangeWeapon.canceled += OnChangeWeapon;
         _inputSystemActions.Player.Run.performed += OnRun;
         _inputSystemActions.Player.Run.canceled += OnRun;
+        _inputSystemActions.Player.Focus.performed += OnFocus;
+        _inputSystemActions.Player.Focus.canceled += OnFocus;
     }
 
     private void Update()
@@ -113,6 +117,18 @@ public class InputManager : MonoBehaviour
         
     }
 
+    void OnFocus(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _isFocusing = true;
+        }
+        else if (context.canceled)
+        {
+            _isFocusing = false;
+        }
+    }
+
 
     public void Clear()
     {
@@ -128,6 +144,8 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.ChangeWeapon.canceled -= OnChangeWeapon; 
         _inputSystemActions.Player.Run.performed -= OnRun;
         _inputSystemActions.Player.Run.canceled -= OnRun;
+        _inputSystemActions.Player.Focus.performed += OnFocus;
+        _inputSystemActions.Player.Focus.canceled -= OnFocus;
 
         _inputSystemActions.Disable();
         _inputSystemActions = null;

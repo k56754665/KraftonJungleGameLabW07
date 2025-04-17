@@ -1,13 +1,13 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static PlayerController;
 using Define;
 
 public class PlayerMove : MonoBehaviour
 {
     Rigidbody2D _rb;
     PlayerController _playerController;
-    float _moveSpeed = 10f;
+    
+    [SerializeField] float _moveSpeed = 10f;
+    [SerializeField] float _focusMoveSpeed = 2f;
     Vector2 _moveDir;
 
     // 음파 가져오기
@@ -30,7 +30,14 @@ public class PlayerMove : MonoBehaviour
         // 음파 생성 조건
         if (_moveDir != Vector2.zero)
         {
-            _rb.linearVelocity = _moveDir.normalized * _moveSpeed * _playerController.RunMultiply;
+            if (InputManager.Instance.IsFocusing)
+            {
+                _rb.linearVelocity = _moveDir.normalized * _focusMoveSpeed * _playerController.RunMultiply;
+            }
+            else
+            {
+                _rb.linearVelocity = _moveDir.normalized * _moveSpeed * _playerController.RunMultiply;
+            }
             // 음파 생성
             if (Time.time - lastSoundwaveTime >= soundwaveInterval) // 음파 생성 간격 확인
             {
