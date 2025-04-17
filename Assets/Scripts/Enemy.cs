@@ -169,6 +169,10 @@ public class Enemy : MonoBehaviour
                 fieldOfViewEnemyLongColor.ChangeFoVColor(fieldOfViewEnemyLongColor.yellow);
                 break;
         }
+
+        // 새로운 rotation 생성 후 적용
+        fieldOfViewEnemyLong.transform.rotation = Quaternion.Lerp(Quaternion.identity, fieldOfViewEnemyLong.transform.rotation, 0.5f);
+        fieldOfViewEnemyWide.transform.rotation = Quaternion.Lerp(Quaternion.identity, fieldOfViewEnemyWide.transform.rotation, 0.5f);
     }
 
     private void OnTriggerEnter2D(Collider2D _collision)
@@ -239,54 +243,53 @@ public class Enemy : MonoBehaviour
     public void FOVStart()
     {
         // Field of View Wide 오브젝트 생성
-        GameObject fovObjectWide = Instantiate(fieldOfViewEnemyPrefabWide, Vector2.zero, Quaternion.identity);
-        
-        // 임시 코드 
-        //fovObjectWide.transform.SetParent(transform); // 적의 자식으로 설정
-        //fovObjectWide.transform.localPosition = Vector3.zero; // 적의 위치에 맞게 설정
+        GameObject fovObjectWide = Instantiate(fieldOfViewEnemyPrefabWide, transform.position, Quaternion.identity);
+        fovObjectWide.transform.SetParent(transform); // 적의 자식으로 설정
+        fovObjectWide.transform.localPosition = Vector3.zero; // 로컬 좌표 (0,0,0)
+        fovObjectWide.transform.localRotation = Quaternion.identity; // 회전 초기화
 
         fieldOfViewEnemyWide = fovObjectWide.GetComponent<FieldOfViewEnemyWide_Script>();
         fieldOfViewEnemyWideColor = fovObjectWide.GetComponent<FoVEnemyColor_Script>();
-        fieldOfViewEnemyWide.enemy = this; // Field of View에 자신을 참조하게 설정
+        fieldOfViewEnemyWide.enemy = this;
         fieldOfViewEnemyWideColor.enemy = this;
 
         // Field of View Long 오브젝트 생성
-        GameObject fovObjectLong = Instantiate(fieldOfViewEnemyPrefabLong, Vector2.zero, Quaternion.identity);
-
-        // 임시 코드 
-        //fovObjectLong.transform.SetParent(transform); // 적의 자식으로 설정
-        //fovObjectLong.transform.localPosition = Vector3.zero; // 적의 위치에 맞게 설정
+        GameObject fovObjectLong = Instantiate(fieldOfViewEnemyPrefabLong, transform.position, Quaternion.identity);
+        fovObjectLong.transform.SetParent(transform); // 적의 자식으로 설정
+        fovObjectLong.transform.localPosition = Vector3.zero; // 로컬 좌표 (0,0,0)
+        fovObjectLong.transform.localRotation = Quaternion.identity; // 회전 초기화
 
         fieldOfViewEnemyLong = fovObjectLong.GetComponent<FieldOfViewEnemyLong_Script>();
         fieldOfViewEnemyLongColor = fovObjectLong.GetComponent<FoVEnemyColor_Script>();
-        fieldOfViewEnemyLong.enemy = this; // Field of View에 자신을 참조하게 설정
+        fieldOfViewEnemyLong.enemy = this;
         fieldOfViewEnemyLongColor.enemy = this;
 
-        // 시야각의 시작 위치와 회전 설정
-        fieldOfViewEnemyWide.SetOrigin(transform.position);
-        fieldOfViewEnemyWide.transform.rotation = transform.rotation; // 적과 같은 회전으로 설정
+        // 시야각의 시작 위치 설정 (로컬 좌표 기준)
+        fieldOfViewEnemyWide.SetOrigin(Vector3.zero);
+        fieldOfViewEnemyLong.SetOrigin(Vector3.zero);
 
-        // 시야각의 시작 위치와 회전 설정
-        fieldOfViewEnemyLong.SetOrigin(transform.position);
-        fieldOfViewEnemyLong.transform.rotation = transform.rotation; // 적과 같은 회전으로 설정
+        // MeshRenderer 활성화 확인
+        MeshRenderer wideRenderer = fovObjectWide.GetComponent<MeshRenderer>();
+        MeshRenderer longRenderer = fovObjectLong.GetComponent<MeshRenderer>();
+        if (wideRenderer != null) wideRenderer.enabled = true;
+        if (longRenderer != null) longRenderer.enabled = true;
 
-        // 시작시 시야각 활성화
+        // 시작 시 시야각 활성화
         fieldOfViewEnemyWide.FoVTurnOnOff(true);
         fieldOfViewEnemyLong.FoVTurnOnOff(true);
+
+        Debug.Log($"FOV Wide Created: Position={fovObjectWide.transform.position}, LocalPosition={fovObjectWide.transform.localPosition}");
+        Debug.Log($"FOV Long Created: Position={fovObjectLong.transform.position}, LocalPosition={fovObjectLong.transform.localPosition}");
     }
 
     public void FOVUpdate()
     {
-        // 적의 현재 방향 벡터 (transform.up: 위쪽, transform.right: 오른쪽)
-        Vector3 aimDirection = transform.up; // 2D에서 위쪽(Y축)을 기준으로
+        Vector3 aimDirection = transform.up; // 또는 transform.right (스프라이트 방향에 따라)
 
-        // Wide FOV 설정
         fieldOfViewEnemyWide.SetAimDirection(aimDirection);
-        fieldOfViewEnemyWide.SetOrigin(transform.position);
-
-        // Long FOV 설정
         fieldOfViewEnemyLong.SetAimDirection(aimDirection);
-        fieldOfViewEnemyLong.SetOrigin(transform.position);
+
+        Debug.Log($"Enemy Position: {transform.position}, AimDirection: {aimDirection}, EulerZ: {transform.eulerAngles.z}");
     }
 
     void ChangeSpeed(float _linearSpeed, float _angularSpeed)
@@ -337,11 +340,6 @@ public class Enemy : MonoBehaviour
                 {
                     //Debug.Log("플레이어가 아닌 오브젝트에 닿았습니다: " + hit.collider.name);
                 }
-            }
-            else
-            {
-                // 장애물에 부딪히지 않으면 원래 거리로 Ray그리기
-                //Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * _viewDistance, UnityEngine.Color.red);
             }
         }
     }
