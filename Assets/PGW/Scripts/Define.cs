@@ -20,6 +20,7 @@ namespace Define
     public enum GunType
     {
         BlueGun,
-        RedGun
+        RedGun,
+        Can,
     }
 }
