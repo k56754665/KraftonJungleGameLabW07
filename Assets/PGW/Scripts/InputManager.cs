@@ -46,7 +46,6 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.Move.performed += OnMove;
         _inputSystemActions.Player.Move.canceled += OnMove;
         _inputSystemActions.Player.Fire.performed += OnFire;
-        _inputSystemActions.Player.Fire.canceled += OnFire;
         _inputSystemActions.Player.Interaction.performed += OnInteraction;
         _inputSystemActions.Player.Interaction.canceled += OnInteraction;
         _inputSystemActions.Player.ChangeWeapon.performed += OnChangeWeapon;
@@ -123,7 +122,6 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.Move.performed -= OnMove;
         _inputSystemActions.Player.Move.canceled -= OnMove;
         _inputSystemActions.Player.Fire.performed -= OnFire;
-        _inputSystemActions.Player.Fire.canceled -= OnFire;
         _inputSystemActions.Player.Interaction.performed -= OnInteraction;
         _inputSystemActions.Player.Interaction.canceled -= OnInteraction;
         _inputSystemActions.Player.ChangeWeapon.performed -= OnChangeWeapon;

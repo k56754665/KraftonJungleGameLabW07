@@ -84,7 +84,7 @@ public class PlayerFire : MonoBehaviour
             Instantiate(soundwaveRedGun, transform.position, transform.rotation);
             redGunNumber -= 1;
             _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
-            Debug.Log("총 발사!");
+            Debug.Log("총 발사!2");
         }
     }
 
