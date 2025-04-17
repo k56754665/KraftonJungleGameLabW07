@@ -65,6 +65,7 @@ public class Soundwave_Script : MonoBehaviour
             if (enemy != null)
             {
                 enemy.currentState = Enemy.EnemyState.Checking;
+
                 enemy.MoveToPlayerPosition();
             }
         }
