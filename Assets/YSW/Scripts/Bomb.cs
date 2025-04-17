@@ -50,7 +50,7 @@ public class Bomb : MonoBehaviour
         foreach (Collider2D nearbyObject in colliders)
         {
             // 플레이어가 범위 안에 있다면 데미지 처리
-            Player player = nearbyObject.GetComponent<Player>();
+            PlayerController player = nearbyObject.GetComponent<PlayerController>();
             if (player != null)
             {
                 player.hp -= damage;
