@@ -95,4 +95,30 @@ public class EnemyManager : MonoBehaviour
             enemy.Respawn();
         }
     }
+
+    public GameObject CheckClosestEnemy()
+    {
+        Enemy closestEnemy = null;
+        float closestDistance = Mathf.Infinity;
+        foreach (var enemy in _enemyStatus.Keys)
+        {
+            if (_enemyStatus[enemy])
+            {
+                float distance = Vector3.Distance(_player.transform.position, enemy.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = enemy;
+                }
+            }
+        }
+        if (closestEnemy != null)
+        {
+            return closestEnemy.gameObject;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
