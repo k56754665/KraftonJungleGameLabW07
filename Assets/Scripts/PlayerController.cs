@@ -42,6 +42,15 @@ public class PlayerController : MonoBehaviour
         SavePointManager.Instance.OnSaveEvent += SavePointPlayer;
         SavePointManager.Instance.OnLoadEvent += LoadSavePointPlayer;
     }
+
+    private void LateUpdate()
+    {
+        // 이동
+        if (_currentState != PlayerState.Interaction)
+        {
+            _playerMove.Move();
+        }
+    }
     void Update()
     {
 
@@ -67,11 +76,7 @@ public class PlayerController : MonoBehaviour
                     break;
             }
 
-            // 이동
-            if (_currentState != PlayerState.Interaction)
-            {
-                _playerMove.Move();
-            }
+            
 
             // 플레이어 각도
             Vector3 mousePosition = InputManager.Instance.PointerMoveInput;
