@@ -9995,6 +9995,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AimLine
       objectReference: {fileID: 0}
+    - target: {fileID: 4482754460072905172, guid: 96b16c728c099764abe0c5d3fa2ef13e, type: 3}
+      propertyPath: _fieldOfViewLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5436133123674791083, guid: 96b16c728c099764abe0c5d3fa2ef13e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
