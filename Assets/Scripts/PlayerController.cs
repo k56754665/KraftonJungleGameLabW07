@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
         _playerShooting = GetComponent<PlayerFire>();
         InputManager.Instance.runAction += PlayerRun;
         InputManager.Instance.stopRunAction += StopRun;
+
+        SavePointManager.Instance.OnSaveEvent += SavePointPlayer;
+        SavePointManager.Instance.OnLoadEvent += LoadSavePointPlayer;
     }
     void Update()
     {
@@ -177,4 +180,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 현재 플레이어의 hp와 위치를 세이브 포인트에 저장하는 함수
+    /// </summary>
+    void SavePointPlayer()
+    {
+        SavePointManager.Instance.SaveHP = hp;
+        SavePointManager.Instance.SavePlayerPosition = transform.position;
+    }
+
+    /// <summary>
+    /// 플레이어의 hp와 위치를 세이브 포인트에 저장된 값으로 변경해주는 함수
+    /// </summary>
+    void LoadSavePointPlayer()
+    {
+        hp = SavePointManager.Instance.SaveHP;
+        transform.position = SavePointManager.Instance.SavePlayerPosition;
+    }
 }

@@ -421,8 +421,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void ChasePlayer()
     {
-        
 
+        if (lastPlayerPosition == null) return;
 
         agent.SetDestination(lastPlayerPosition); // 마지막으로 본 위치로 이동
 
@@ -651,7 +651,7 @@ public class Enemy : MonoBehaviour
 
         // TODO : Destroy 대신 SetActive(false)로 비활성화, EnemyManager의 딕셔너리에 사망 현황 업데이트
         gameObject.SetActive(false);
-        EnemyManager.Instance.UpdateEnemyStatus(this, false);
+        EnemyManager.Instance.AddDeadEnemyStatus(this);
         //Destroy(gameObject);
     }
 
