@@ -16,6 +16,9 @@ public class PlayerInteraction : MonoBehaviour
     [Header("Assassination")]
     float assassinRange = 3f; // 공격 범위
 
+    //오브젝트 상호작용
+    bool _isInCloset = false; // 플레이어가 옷장 안에 있는지 여부
+
     void Start()
     {
         _playerController = GetComponent<PlayerController>();
@@ -40,6 +43,13 @@ public class PlayerInteraction : MonoBehaviour
                     _playerController.CurrentTarget.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
                     break;
             }
+        }
+        if (_isInCloset)
+        {
+            _isInCloset = false;
+
+            _playerController.CurrentState = PlayerState.Walk;
+            _playerController.CurrentTarget.SendMessage("Close", SendMessageOptions.DontRequireReceiver);
         }
     }
 
