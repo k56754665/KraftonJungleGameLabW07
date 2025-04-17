@@ -11,35 +11,26 @@ public class PlayerController : MonoBehaviour
     }
 
     PlayerState currentState = PlayerState.Walk;
-    public PlayerState CurrentState { get { return currentState; } set { currentState = value; } }
 
+    [SerializeField] ParticleSystem deathParticle;
+    [SerializeField] FieldOfView_Script fieldOfView;
+
+    Canvas_Script _canvas;
+    GameManager _gameManager;
+    GameObject _targetPatient;
+    PlayerFire _playerShooting;
+    PlayerMove _playerMove;
 
     public int hp;
     public int maxHp;
-
-    // 총
-    public Canvas_Script canvas;
-    public GameManager gameManager;
-    public ParticleSystem deathParticle;
-    public ParticleSystem healParticle;
-    public Rigidbody2D playerRb;
-
-    // 시야각 가져오기
-    [SerializeField] private FieldOfView_Script fieldOfView;
-
-    public GameObject targetPatient;
-    bool isCanSave = false;
-    public bool IsCanSave { get { return isCanSave; } set { isCanSave = value; } }
-
-    public float holdKeyTime = 0f;
-
-    //이동
-    PlayerMove _playerMove; 
+    bool _canSave = false;
     float runMultiply = 1;
-    public float RunMultiply => runMultiply;
 
-    //사격
-    PlayerFire _playerShooting;
+    public PlayerState CurrentState { get { return currentState; } set { currentState = value; } }
+    public GameObject TargetPatient => _targetPatient;
+    public bool CanSave { get { return _canSave; } set { _canSave = value; } }
+    public float RunMultiply => runMultiply;
+       
 
 
     void Start()
@@ -47,9 +38,8 @@ public class PlayerController : MonoBehaviour
         hp = maxHp;
         runMultiply = 1;
 
-        gameManager = GameObject.FindFirstObjectByType<GameManager>();
-        canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
-        playerRb = GetComponent<Rigidbody2D>();
+        _gameManager = GameObject.FindFirstObjectByType<GameManager>();
+        _canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
         _playerMove = GetComponent<PlayerMove>();
         _playerShooting = GetComponent<PlayerFire>();
         InputManager.Instance.runAction += PlayerRun;
@@ -63,7 +53,7 @@ public class PlayerController : MonoBehaviour
         SetHealth();
 
 
-        if (!gameManager.isgameover)
+        if (!_gameManager.isgameover)
         {
             // 플레이어 상태에 따른 속도 배수 변화
             switch (currentState) 
@@ -101,16 +91,16 @@ public class PlayerController : MonoBehaviour
             // 플레이어 체력이 적으면 UI표시
             if (hp == 1)
             {
-                canvas.lowHp_UI.SetActive(true);
+                _canvas.lowHp_UI.SetActive(true);
             }
             else
             {
-                canvas.lowHp_UI.SetActive(false);
+                _canvas.lowHp_UI.SetActive(false);
             }
 
             if (hp < 1)
             {
-                gameManager.Gameover();
+                _gameManager.Gameover();
                 TriggerDeath();
                 if (gameObject != null)
                 {
@@ -133,13 +123,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void OnDestroy()
-    {
-        // 죽으면 파티클 생성
-        Instantiate(deathParticle, transform.position, transform.rotation);
-    }
-
     // 체력을 설정하는 메서드
     public void SetHealth()
     {
@@ -154,6 +137,7 @@ public class PlayerController : MonoBehaviour
             hp = 0; 
         }
     }
+
     void TriggerDeath() 
     {
         if (deathParticle != null)
@@ -163,7 +147,6 @@ public class PlayerController : MonoBehaviour
             Destroy(death.gameObject, 2f);
         }
     }
-
 
     private void OnTriggerEnter2D(Collider2D _collision)
     {
@@ -182,18 +165,17 @@ public class PlayerController : MonoBehaviour
         //환자 살리기
         if (_collision.gameObject.CompareTag("Patient"))
         {
-            isCanSave = true;
-            targetPatient = _collision.gameObject;
+            _canSave = true;
+            _targetPatient = _collision.gameObject;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject == targetPatient) 
+        if (collision.gameObject == _targetPatient) 
         {
-            isCanSave = false;
-            holdKeyTime = 0f;
-            targetPatient = null;
+            _canSave = false;
+            _targetPatient = null;
         }
     }
 
