@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour
     {
         if (_collision.gameObject.CompareTag("Field Of View Object"))
         {
-            Debug.Log("Hit Wall");
+            //Debug.Log("Hit Wall");
             Destroy(gameObject);
         }
     }
