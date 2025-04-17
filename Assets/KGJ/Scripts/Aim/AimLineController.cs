@@ -24,6 +24,7 @@ public class AimLineController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (_playerController == null) return;
         Vector2 startPosition = _playerController.transform.position;
         Vector2 pointerPosition = InputManager.Instance.PointerMoveInput;
         Vector2 direction = (pointerPosition - startPosition).normalized;
