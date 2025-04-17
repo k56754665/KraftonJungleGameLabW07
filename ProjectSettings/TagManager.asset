@@ -12,6 +12,7 @@ TagManager:
   - Water
   - Field Of View Object
   - GunAmmo
+  - Object
   layers:
   - Default
   - TransparentFX

@@ -196,6 +196,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Object"))
+        {
+            _targetType = Target.Object;
+            _target = collision.gameObject;
+            _playerInteraction.ShowEKeyUI(true);
+            Debug.Log("Object");
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Object"))
+        {
+            _targetType = Target.None;
+            _target = null;
+            _playerInteraction.ShowEKeyUI(false);
+            Debug.Log("Exit Object");
+        }
+    }
+
     /// <summary>
     /// 현재 플레이어의 hp와 위치를 세이브 포인트에 저장하는 함수
     /// </summary>
@@ -212,5 +234,13 @@ public class PlayerController : MonoBehaviour
     {
         hp = SavePointManager.Instance.SaveHP;
         transform.position = SavePointManager.Instance.SavePlayerPosition;
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.runAction -= PlayerRun;
+        InputManager.Instance.stopRunAction -= StopRun;
+        SavePointManager.Instance.OnSaveEvent -= SavePointPlayer;
+        SavePointManager.Instance.OnLoadEvent -= LoadSavePointPlayer;
     }
 }

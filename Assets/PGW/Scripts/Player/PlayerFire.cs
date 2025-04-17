@@ -1,14 +1,9 @@
 using System;
 using UnityEngine;
+using Define;
 
 public class PlayerFire : MonoBehaviour
 {
-    public enum GunType
-    {
-        BlueGun,
-        RedGun
-    }
-
     Canvas_Script _canvas;
     GunType currentGunType;
 
@@ -18,6 +13,9 @@ public class PlayerFire : MonoBehaviour
 
     public int blueGunNumber;
     public int redGunNumber;
+
+    bool _canFire; // 총 발사 가능 여부
+    public bool CanFire { get { return _canFire; } set { _canFire = value; } }
 
     void Start()
     {
@@ -31,6 +29,8 @@ public class PlayerFire : MonoBehaviour
 
         SavePointManager.Instance.OnSaveEvent += SavePointFire;
         SavePointManager.Instance.OnLoadEvent += LoadSavePointFire;
+
+        _canFire = true; // 총 발사 가능 상태로 초기화
     }
 
     public void CheckMouseWheel(Vector2 vector)
@@ -70,6 +70,7 @@ public class PlayerFire : MonoBehaviour
 
     public void PlayerGunFire()
     {
+        if (!_canFire) return; // 총 발사 불가능 상태일 때는 아무것도 하지 않음
         if (currentGunType == GunType.BlueGun && blueGunNumber > 0)
         {
             gun.GetComponent<Gun>().BlueGunFire();
