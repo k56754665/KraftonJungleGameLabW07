@@ -18,6 +18,8 @@ public class InputManager : MonoBehaviour
     public Action runAction;
     public Action stopRunAction;
     public Action<Vector2> changeWeaponAction;
+    public Action holdFocusAction;
+    public Action stopHoldFocusAction;
 
     Vector2 _moveInput;
     Vector2 _changeWeaponInput;
@@ -52,6 +54,8 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.ChangeWeapon.canceled += OnChangeWeapon;
         _inputSystemActions.Player.Run.performed += OnRun;
         _inputSystemActions.Player.Run.canceled += OnRun;
+        _inputSystemActions.Player.Focus.performed += OnFocus;
+        _inputSystemActions.Player.Focus.canceled += OnFocus;
     }
 
     private void Update()
@@ -113,6 +117,18 @@ public class InputManager : MonoBehaviour
         
     }
 
+    void OnFocus(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            holdFocusAction?.Invoke();
+        }
+        else if (context.canceled)
+        {
+            stopHoldFocusAction?.Invoke();
+        }
+    }
+
 
     public void Clear()
     {
@@ -128,6 +144,8 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.ChangeWeapon.canceled -= OnChangeWeapon; 
         _inputSystemActions.Player.Run.performed -= OnRun;
         _inputSystemActions.Player.Run.canceled -= OnRun;
+        _inputSystemActions.Player.Focus.performed += OnFocus;
+        _inputSystemActions.Player.Focus.canceled -= OnFocus;
 
         _inputSystemActions.Disable();
         _inputSystemActions = null;
