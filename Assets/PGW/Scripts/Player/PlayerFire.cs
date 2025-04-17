@@ -29,6 +29,8 @@ public class PlayerFire : MonoBehaviour
         InputManager.Instance.fireAction += PlayerGunFire; // 총 발사
         InputManager.Instance.changeWeaponAction += CheckMouseWheel; // 총 변경
 
+        SavePointManager.Instance.OnSaveEvent += SavePointFire;
+        SavePointManager.Instance.OnLoadEvent += LoadSavePointFire;
     }
 
     public void CheckMouseWheel(Vector2 vector)
@@ -82,7 +84,25 @@ public class PlayerFire : MonoBehaviour
             Instantiate(soundwaveRedGun, transform.position, transform.rotation);
             redGunNumber -= 1;
             _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
-            Debug.Log("총 발사!");
+            Debug.Log("총 발사!2");
         }
+    }
+
+    /// <summary>
+    /// 현재 총알 수를 세이브 포인트에 저장하는 함수
+    /// </summary>
+    void SavePointFire()
+    {
+        SavePointManager.Instance.SaveBlueGunNumber = blueGunNumber;
+        SavePointManager.Instance.SaveRedGunNumber = redGunNumber;
+    }
+
+    /// <summary>
+    /// 총알 수를 세이브 포인트에 저장된 값으로 변경해주는 함수
+    /// </summary>
+    void LoadSavePointFire()
+    {
+        blueGunNumber = SavePointManager.Instance.SaveBlueGunNumber;
+        redGunNumber = SavePointManager.Instance.SaveRedGunNumber;
     }
 }

@@ -1,34 +1,28 @@
 using UnityEngine;
 using CodeMonkey.Utils;
+using Define;
 
 public class PlayerController : MonoBehaviour
 {
-    public enum PlayerState 
-    {
-        Walk,
-        Run,
-        Interaction
-    }
-
-    PlayerState currentState = PlayerState.Walk;
+    PlayerState _currentState = PlayerState.Walk;
+    [SerializeField] Target _targetType = Target.None;
 
     [SerializeField] ParticleSystem deathParticle;
     [SerializeField] FieldOfView_Script fieldOfView;
 
     Canvas_Script _canvas;
     GameManager _gameManager;
-    GameObject _targetPatient;
-    PlayerFire _playerShooting;
+    [SerializeField] GameObject _target;
     PlayerMove _playerMove;
+    PlayerInteraction _playerInteraction;
 
     public int hp;
     public int maxHp;
-    bool _canSave = false;
     float runMultiply = 1;
 
-    public PlayerState CurrentState { get { return currentState; } set { currentState = value; } }
-    public GameObject TargetPatient => _targetPatient;
-    public bool CanSave { get { return _canSave; } set { _canSave = value; } }
+    public PlayerState CurrentState { get { return _currentState; } set { _currentState = value; } }
+    public Target TargetType { get { return _targetType; } set { _targetType = value; } }
+    public GameObject CurrentTarget { get { return _target; } set { _target = value; } }
     public float RunMultiply => runMultiply;
        
 
@@ -41,9 +35,21 @@ public class PlayerController : MonoBehaviour
         _gameManager = GameObject.FindFirstObjectByType<GameManager>();
         _canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
         _playerMove = GetComponent<PlayerMove>();
-        _playerShooting = GetComponent<PlayerFire>();
+        _playerInteraction = GetComponent<PlayerInteraction>();
         InputManager.Instance.runAction += PlayerRun;
         InputManager.Instance.stopRunAction += StopRun;
+
+        SavePointManager.Instance.OnSaveEvent += SavePointPlayer;
+        SavePointManager.Instance.OnLoadEvent += LoadSavePointPlayer;
+    }
+
+    private void LateUpdate()
+    {
+        // 이동
+        if (_currentState != PlayerState.Interaction)
+        {
+            _playerMove.Move();
+        }
     }
     void Update()
     {
@@ -54,7 +60,7 @@ public class PlayerController : MonoBehaviour
         if (!_gameManager.isgameover)
         {
             // 플레이어 상태에 따른 속도 배수 변화
-            switch (currentState) 
+            switch (_currentState)
             {
                 case PlayerState.Walk:
                     runMultiply = 1f;
@@ -70,11 +76,7 @@ public class PlayerController : MonoBehaviour
                     break;
             }
 
-            // 이동
-            if (currentState != PlayerState.Interaction)
-            {
-                _playerMove.Move();
-            }
+            
 
             // 플레이어 각도
             Vector3 mousePosition = InputManager.Instance.PointerMoveInput;
@@ -106,18 +108,35 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        if(EnemyManager.Instance.CheckClosestEnemy())
+        {
+            GameObject closestEnemy = EnemyManager.Instance.CheckClosestEnemy();
+            if(_playerInteraction.CheckAssassinateCondition(closestEnemy))
+            {
+                Debug.Log("Assassination condition met");
+                _targetType = Target.Enemy;
+                _target = closestEnemy;
+                _playerInteraction.ShowEKeyUI(true);
+            }
+            else if(_target && _targetType == Target.Enemy)
+            {
+                _targetType = Target.None;
+                _playerInteraction.ShowEKeyUI(false);
+            }
+        }
     }
 
-    void PlayerRun()
+        void PlayerRun()
     {
-        currentState = PlayerState.Run;
+        _currentState = PlayerState.Run;
     }
 
     void StopRun()
     {
-        if (currentState == PlayerState.Run)
+        if (_currentState == PlayerState.Run)
         {
-            currentState = PlayerState.Walk;
+            _currentState = PlayerState.Walk;
         }
     }
 
@@ -160,21 +179,38 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        _target = _collision.gameObject;
         //환자 살리기
         if (_collision.gameObject.CompareTag("Patient"))
         {
-            _canSave = true;
-            _targetPatient = _collision.gameObject;
+            _targetType = Target.Patient;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject == _targetPatient) 
+        if (collision.gameObject == _target) 
         {
-            _canSave = false;
-            _targetPatient = null;
+            _targetType = Target.None;
+            _target = null;
         }
     }
 
+    /// <summary>
+    /// 현재 플레이어의 hp와 위치를 세이브 포인트에 저장하는 함수
+    /// </summary>
+    void SavePointPlayer()
+    {
+        SavePointManager.Instance.SaveHP = hp;
+        SavePointManager.Instance.SavePlayerPosition = transform.position;
+    }
+
+    /// <summary>
+    /// 플레이어의 hp와 위치를 세이브 포인트에 저장된 값으로 변경해주는 함수
+    /// </summary>
+    void LoadSavePointPlayer()
+    {
+        hp = SavePointManager.Instance.SaveHP;
+        transform.position = SavePointManager.Instance.SavePlayerPosition;
+    }
 }

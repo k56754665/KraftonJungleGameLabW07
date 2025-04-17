@@ -1,17 +1,23 @@
 using UnityEngine;
 using static PlayerController;
 using System.Collections;
+using Define;
 
 public class PlayerInteraction : MonoBehaviour
 {
     PlayerController _playerController;
     GameManager _gameManager;
 
-    // Healing
+    // 구출
     [SerializeField] ParticleSystem _healParticle;
     bool _isInteractionActive; // 인터랙션 진행 여부
-
     float _pressTime;
+
+    //암살
+    [Header("Assassination")]
+    float assassinRange = 3f; // 공격 범위
+    float rotationThresholdMin = -180f;
+    float rotationThresholdMax = 180f;
 
     void Start()
     {
@@ -23,12 +29,17 @@ public class PlayerInteraction : MonoBehaviour
 
     void PlayerInteractionAction()
     {
-        if (_playerController.CanSave && _playerController.TargetPatient)
+        if (_playerController.CurrentTarget)
         {
-            _playerController.CurrentState = PlayerState.Interaction;
-            _pressTime = Time.time;
-            _isInteractionActive = true; // 인터랙션 시작
-            StartCoroutine(AutoExecuteAfterDelay(2f)); // 3초 후 자동 실행
+            switch(_playerController.TargetType)
+            {
+                case Target.Patient:
+                    StartRescue();
+                    break;
+                case Target.Enemy:
+                    Assassinate(_playerController.CurrentTarget);
+                    break;
+            }
         }
     }
 
@@ -37,20 +48,33 @@ public class PlayerInteraction : MonoBehaviour
         _isInteractionActive = false; // 인터랙션 종료
         StopCoroutine(AutoExecuteAfterDelay(2f)); // 자동 실행 코루틴 중지
 
-        if (_playerController.CanSave && _playerController.TargetPatient)
+        if (_playerController.TargetType == Target.Patient && _playerController.CurrentTarget)
         {
-            float timeDifference = Time.time - _pressTime;
-            float holdDuration = 2f;
-
-            if (timeDifference >= holdDuration)
-            {
-                TriggerPatientHeal();
-                Destroy(_playerController.TargetPatient);
-                _playerController.CanSave = false;
-                _gameManager.isGameClear = true;
-            }
-            _playerController.CurrentState = PlayerState.Walk;
+            EndRescue(_playerController.CurrentTarget);
         }
+    }
+
+    //환자 구출
+    void StartRescue()
+    {
+        _playerController.CurrentState = PlayerState.Interaction;
+        _pressTime = Time.time;
+        _isInteractionActive = true; // 인터랙션 시작
+        StartCoroutine(AutoExecuteAfterDelay(2f)); // 3초 후 자동 실행
+    }
+
+    void EndRescue(GameObject target)
+    {
+        float timeDifference = Time.time - _pressTime;
+        float holdDuration = 2f;
+
+        if (timeDifference >= holdDuration)
+        {
+            TriggerPatientHeal();
+            Destroy(target);
+            _gameManager.isGameClear = true;
+        }
+        _playerController.CurrentState = PlayerState.Walk;
     }
 
     private IEnumerator AutoExecuteAfterDelay(float delay)
@@ -58,12 +82,10 @@ public class PlayerInteraction : MonoBehaviour
         yield return new WaitForSeconds(delay); // 3초 대기
 
         // PlayerHoldInteractionAction이 호출되지 않은 경우에만 실행
-        if (_isInteractionActive && _playerController.CanSave && _playerController.TargetPatient)
+        if (_isInteractionActive && _playerController.TargetType == Target.Patient && _playerController.CurrentTarget)
         {
-            // gameManager.score += 1;
             TriggerPatientHeal();
-            Destroy(_playerController.TargetPatient);
-            _playerController.CanSave = false;
+            Destroy(_playerController.CurrentTarget);
             _gameManager.isGameClear = true;
             _playerController.CurrentState = PlayerState.Walk;
         }
@@ -73,9 +95,53 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (_healParticle != null)
         {
-            ParticleSystem heal = Instantiate(_healParticle, _playerController.TargetPatient.transform.position, Quaternion.identity);
+            ParticleSystem heal = Instantiate(_healParticle, _playerController.CurrentTarget.transform.position, Quaternion.identity);
             heal.Play();
             Destroy(heal.gameObject, 2f);
+        }
+    }
+
+    //적 암살
+    void Assassinate(GameObject target)
+    {
+        target.GetComponent<Enemy>().EnemyDie();
+        Instantiate(_healParticle, transform.position, transform.rotation);
+    }
+
+    public bool CheckAssassinateCondition(GameObject target)
+    {
+        // 암살시 적과 플레이어 거리 확인
+        Vector3 enemyPosition = target.transform.position;
+        Vector3 directionToEnemy = enemyPosition - transform.position;
+        float distance = directionToEnemy.magnitude;
+        // 암살시 플레이어가 공격 범위 내에 있는지 확인
+        if (distance < assassinRange)
+        {
+            
+            float angleToEnemy = Vector3.SignedAngle(transform.up, directionToEnemy.normalized, Vector3.forward);
+            float angleDifference = Mathf.Abs(angleToEnemy);
+            // 각도 차이가 지정한 범위에 있는지 확인
+            if (angleDifference >= rotationThresholdMin && angleDifference <= rotationThresholdMax)
+            {
+                Debug.Log("Assassination condition met");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void ShowEKeyUI(bool _isPlayerClose)
+    {
+        Canvas pressE_UI = _playerController.CurrentTarget?.transform.GetChild(0).GetComponent<Canvas>();
+        if (pressE_UI == null) return;
+        if (_isPlayerClose == true)
+        {
+            pressE_UI.enabled = true;
+        }
+        else
+        {
+            pressE_UI.enabled = false;
+            _playerController.CurrentTarget = null;
         }
     }
 }

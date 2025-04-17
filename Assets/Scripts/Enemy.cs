@@ -10,7 +10,6 @@ public class Enemy : MonoBehaviour
     // 플레이어의 Transform
     [Header("Player transform")]
     public Transform player;
-    public PlayerController playerPlayer;
     private Vector3 lastPlayerPosition; // 마지막으로 본 플레이어 위치
 
     [Header("Enemy Hp")]
@@ -27,13 +26,6 @@ public class Enemy : MonoBehaviour
     public ParticleSystem BuleDamagedParticle;
     public ParticleSystem RedDamagedParticle;
     public ParticleSystem HealingParticle;
-
-    // 뒤에서 암살
-    [Header("Assassination")]
-    [SerializeField] GameObject PressE_UI;
-    public float assassinRange = 1f; // 공격 범위
-    public float rotationThresholdMin = 130f;
-    public float rotationThresholdMax = 180f;
 
     // 실제 raycast 시야각
     [Header("FoV of Enemy")]
@@ -87,7 +79,7 @@ public class Enemy : MonoBehaviour
     public float searchingWalkPointRange;
     public float searchingTime;
     // Patroling
-    [Header("AI: Patroling")]
+    [Header("AI: Patroling")] 
     private Vector3 walkPoint;
     private bool isWalkPointSet;
 
@@ -95,16 +87,20 @@ public class Enemy : MonoBehaviour
     GameObject _soundwaveRun; // 프리팹
     GameObject _soundwaveRunGameObject; // 생성된 게임 오브젝트
 
+    Canvas _pressE_UI;
+
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerPlayer = GameObject.FindFirstObjectByType<PlayerController>();
         agentRotate = GetComponent<AgentRotateSmooth2d>();
         agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
+        _pressE_UI = transform.GetChild(0).GetComponent<Canvas>();
+        _pressE_UI.enabled = false;
+
         // soundwaveRun Prefab 로드
         _soundwaveRun = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveRun");
 
@@ -127,8 +123,6 @@ public class Enemy : MonoBehaviour
         }
 
         FOVUpdate();
-
-        BeingAssassinate();
 
         CheckFieldOfView(wideFov, wideViewDistance);
         CheckFieldOfView(longFov, longViewDistance);
@@ -402,27 +396,12 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// E 키 UI를 보여주는 함수
-    /// </summary>
-    void ShowEKeyUI(bool _isPlayerClose)
-    {
-        if (_isPlayerClose == true)
-        {
-            PressE_UI.SetActive(true);
-        }
-        else
-        {
-            PressE_UI.SetActive(false);
-        }
-    }
-
-    /// <summary>
     /// 플레이어를 쫓는 함수
     /// </summary>
     private void ChasePlayer()
     {
-        
 
+        if (lastPlayerPosition == null) return;
 
         agent.SetDestination(lastPlayerPosition); // 마지막으로 본 위치로 이동
 
@@ -607,42 +586,6 @@ public class Enemy : MonoBehaviour
         fieldOfViewEnemyLong.FoVTurnOnOff(true);
     }
 
-    /// <summary>
-    /// 플레이어가 적의 뒤에 있을 때 E 키를 눌러 적을 암살할 수 있습니다.
-    /// </summary>
-    public void BeingAssassinate()
-    {
-        // 암살시 적과 플레이어 거리 확인
-        Vector3 enemyPosition = transform.position;
-        Vector3 directionToPlayer = player.position - enemyPosition;
-        float distance = directionToPlayer.magnitude;
-
-        // 암살시 플레이어가 공격 범위 내에 있는지 확인
-        if (distance < assassinRange)
-        {
-            float angleToPlayer = Vector3.SignedAngle(transform.up, directionToPlayer.normalized, Vector3.forward);
-            float angleDifference = Mathf.Abs(angleToPlayer);
-
-            // 각도 차이가 지정한 범위에 있는지 확인
-            if (angleDifference >= rotationThresholdMin && angleDifference <= rotationThresholdMax)
-            {
-                ShowEKeyUI(true);
-
-                // E 키를 눌렀는지 확인
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    EnemyDie();
-                    playerPlayer.hp = playerPlayer.maxHp;
-                    Instantiate(HealingParticle, player.transform.position, player.transform.rotation);
-                }
-            }
-        }
-        else
-        {
-            ShowEKeyUI(false);
-        }
-    }
-
     public void EnemyDie()
     {
         fieldOfViewEnemyWide.DestroyFOV();
@@ -651,7 +594,7 @@ public class Enemy : MonoBehaviour
 
         // TODO : Destroy 대신 SetActive(false)로 비활성화, EnemyManager의 딕셔너리에 사망 현황 업데이트
         gameObject.SetActive(false);
-        EnemyManager.Instance.UpdateEnemyStatus(this, false);
+        EnemyManager.Instance.AddDeadEnemyStatus(this);
         //Destroy(gameObject);
     }
 
