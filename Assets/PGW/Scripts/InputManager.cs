@@ -1,8 +1,6 @@
 using System;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.Rendering.FilterWindow;
 
 public class InputManager : MonoBehaviour
 {
@@ -48,15 +46,20 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.Move.performed += OnMove;
         _inputSystemActions.Player.Move.canceled += OnMove;
         _inputSystemActions.Player.Fire.performed += OnFire;
-        _inputSystemActions.Player.Fire.canceled += OnFire;
         _inputSystemActions.Player.Interaction.performed += OnInteraction;
         _inputSystemActions.Player.Interaction.canceled += OnInteraction;
         _inputSystemActions.Player.ChangeWeapon.performed += OnChangeWeapon;
         _inputSystemActions.Player.ChangeWeapon.canceled += OnChangeWeapon;
-        _inputSystemActions.Player.PointerMove.performed += OnPointerMove;
-        _inputSystemActions.Player.PointerMove.canceled += OnPointerMove;
         _inputSystemActions.Player.Run.performed += OnRun;
         _inputSystemActions.Player.Run.canceled += OnRun;
+    }
+
+    private void Update()
+    {
+        Vector2 pointerPosition = _inputSystemActions.Player.PointerMove.ReadValue<Vector2>();
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(pointerPosition.x, pointerPosition.y, Camera.main.nearClipPlane));
+
+        _pointerMoveInput = worldPosition;
     }
 
     void OnMove(InputAction.CallbackContext context)
@@ -110,13 +113,6 @@ public class InputManager : MonoBehaviour
         
     }
 
-    void OnPointerMove(InputAction.CallbackContext context)
-    {
-        Vector3 mousePos = context.ReadValue<Vector2>();
-        mousePos.z = Camera.main.nearClipPlane;         // 스크린 좌표에서 카메라까지의 거리인 nearClipPlane을 z축으로 설정
-        _pointerMoveInput = Camera.main.ScreenToWorldPoint(mousePos);
-    }
-
 
     public void Clear()
     {
@@ -126,13 +122,10 @@ public class InputManager : MonoBehaviour
         _inputSystemActions.Player.Move.performed -= OnMove;
         _inputSystemActions.Player.Move.canceled -= OnMove;
         _inputSystemActions.Player.Fire.performed -= OnFire;
-        _inputSystemActions.Player.Fire.canceled -= OnFire;
         _inputSystemActions.Player.Interaction.performed -= OnInteraction;
         _inputSystemActions.Player.Interaction.canceled -= OnInteraction;
         _inputSystemActions.Player.ChangeWeapon.performed -= OnChangeWeapon;
         _inputSystemActions.Player.ChangeWeapon.canceled -= OnChangeWeapon; 
-        _inputSystemActions.Player.PointerMove.performed -= OnPointerMove;
-        _inputSystemActions.Player.PointerMove.canceled -= OnPointerMove;
         _inputSystemActions.Player.Run.performed -= OnRun;
         _inputSystemActions.Player.Run.canceled -= OnRun;
 

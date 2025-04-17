@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static PlayerController;
+using Define;
 
 public class PlayerMove : MonoBehaviour
 {
