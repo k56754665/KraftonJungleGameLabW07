@@ -16,8 +16,6 @@ public class PlayerInteraction : MonoBehaviour
     //암살
     [Header("Assassination")]
     float assassinRange = 3f; // 공격 범위
-    float rotationThresholdMin = -180f;
-    float rotationThresholdMax = 180f;
 
     void Start()
     {
@@ -38,6 +36,9 @@ public class PlayerInteraction : MonoBehaviour
                     break;
                 case Target.Enemy:
                     Assassinate(_playerController.CurrentTarget);
+                    break;
+                case Target.Object:
+                    // 오브젝트와의 상호작용 처리
                     break;
             }
         }
@@ -117,11 +118,9 @@ public class PlayerInteraction : MonoBehaviour
         // 암살시 플레이어가 공격 범위 내에 있는지 확인
         if (distance < assassinRange)
         {
-            
-            float angleToEnemy = Vector3.SignedAngle(transform.up, directionToEnemy.normalized, Vector3.forward);
-            float angleDifference = Mathf.Abs(angleToEnemy);
-            // 각도 차이가 지정한 범위에 있는지 확인
-            if (angleDifference >= rotationThresholdMin && angleDifference <= rotationThresholdMax)
+            // 적 상태 확인
+            Enemy.EnemyState enemyState = target.GetComponent<Enemy>().currentState;
+            if (enemyState == Enemy.EnemyState.Patrolling || enemyState == Enemy.EnemyState.Stunning)
             {
                 Debug.Log("Assassination condition met");
                 return true;
