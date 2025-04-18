@@ -2,18 +2,35 @@ using UnityEngine;
 
 public class EnemyUIController_Script : MonoBehaviour
 {
-    public Transform enemy; // ÀûÀÇ Transform
-    public Vector3 UIoffset = new Vector3(0, 150, 0); // ÀûÀ¸·ÎºÎÅÍÀÇ ¿ÀÇÁ¼Â
+    public Transform enemy; // ì ì˜ Transform
+    public Vector3 UIoffset = new Vector3(0, 150, 0); // ì ìœ¼ë¡œë¶€í„°ì˜ ì˜¤í”„ì…‹
+    Canvas _canvas;
 
+    void Start()
+    {
+        _canvas = GetComponent<Canvas>();
+    }
+
+    public void ShowUI()
+    {
+        _canvas.enabled = true;
+    }
+
+    public void HideUI()
+    {
+        _canvas.enabled = false;
+    }
     void Update()
     {
-        // ÀûÀÇ À§Ä¡¿¡ ¿ÀÇÁ¼ÂÀ» ´õÇÏ¿© UIÀÇ À§Ä¡¸¦ ¼³Á¤
+        if (enemy == null) return;
+
+        // ì ì˜ ìœ„ì¹˜ì— ì˜¤í”„ì…‹ì„ ë”í•˜ì—¬ UIì˜ ìœ„ì¹˜ë¥¼ ì„¤ì •
         Vector3 targetPosition = enemy.position + UIoffset;
 
-        // UIÀÇ À§Ä¡¸¦ ¾÷µ¥ÀÌÆ®
+        // UIì˜ ìœ„ì¹˜ë¥¼ ì—…ë°ì´íŠ¸
         transform.position = targetPosition;
 
-        // UIÀÇ È¸ÀüÀ» ÃÊ±âÈ­ÇÏ¿© Ç×»ó Á¤¸éÀ» ¹Ù¶óº¸°Ô ¼³Á¤
+        // UIì˜ íšŒì „ì„ ì´ˆê¸°í™”í•˜ì—¬ í•­ìƒ ì •ë©´ì„ ë°”ë¼ë³´ê²Œ ì„¤ì •
         transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 }

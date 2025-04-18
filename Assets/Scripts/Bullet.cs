@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.position += -transform.up * speed * Time.deltaTime;
+        transform.position += transform.up * speed * Time.deltaTime;
     }
 
 

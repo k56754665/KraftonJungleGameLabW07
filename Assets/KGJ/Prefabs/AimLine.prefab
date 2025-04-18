@@ -46,6 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ced3ac5d20c454eba1f7cde330fd6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fieldOfViewLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _followSpeed: 10
 --- !u!120 &356334516657245163
 LineRenderer:
   serializedVersion: 2
@@ -102,7 +106,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.2531643
+        value: 0.101263046
         inSlope: 0
         outSlope: 0
         tangentMode: 0

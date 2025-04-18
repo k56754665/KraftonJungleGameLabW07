@@ -127,9 +127,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-        void PlayerRun()
+    void PlayerRun()
     {
-        _currentState = PlayerState.Run;
+        if (!_playerInteraction.IsInCloset)
+            _currentState = PlayerState.Run;
     }
 
     void StopRun()
@@ -170,20 +171,23 @@ public class PlayerController : MonoBehaviour
         // 총알 맞기
         if (_collision.gameObject.CompareTag("Bullet"))
         {
+            
             Bullet bullet = _collision.gameObject.GetComponent<Bullet>();
 
             if (bullet.bulletColor == Bullet.BulletColor.Yellow)
             {
+                Debug.Log("Hit Bullet");
                 hp -= 1;
                 Instantiate(deathParticle, transform.position, transform.rotation);
             }
         }
 
-        _target = _collision.gameObject;
+        
         //환자 살리기
         if (_collision.gameObject.CompareTag("Patient"))
         {
             _targetType = Target.Patient;
+            _target = _collision.gameObject;
         }
     }
 
@@ -193,6 +197,30 @@ public class PlayerController : MonoBehaviour
         {
             _targetType = Target.None;
             _target = null;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Object"))
+        {
+            _targetType = Target.Object;
+            _target = collision.gameObject;
+            if(_target)
+                _target.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
+            Debug.Log("Object");
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Object"))
+        {
+            _targetType = Target.None;
+            if (_target) 
+                _target.GetComponentInChildren<EnemyUIController_Script>().HideUI();
+            _target = null;
+            Debug.Log("Exit Object");
         }
     }
 
@@ -212,5 +240,13 @@ public class PlayerController : MonoBehaviour
     {
         hp = SavePointManager.Instance.SaveHP;
         transform.position = SavePointManager.Instance.SavePlayerPosition;
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.runAction -= PlayerRun;
+        InputManager.Instance.stopRunAction -= StopRun;
+        SavePointManager.Instance.OnSaveEvent -= SavePointPlayer;
+        SavePointManager.Instance.OnLoadEvent -= LoadSavePointPlayer;
     }
 }

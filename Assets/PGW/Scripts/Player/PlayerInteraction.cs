@@ -1,5 +1,4 @@
 using UnityEngine;
-using static PlayerController;
 using System.Collections;
 using Define;
 
@@ -16,8 +15,10 @@ public class PlayerInteraction : MonoBehaviour
     //암살
     [Header("Assassination")]
     float assassinRange = 3f; // 공격 범위
-    float rotationThresholdMin = -180f;
-    float rotationThresholdMax = 180f;
+
+    //오브젝트 상호작용
+    bool _isInCloset = false; // 플레이어가 옷장 안에 있는지 여부
+    public bool IsInCloset { get { return _isInCloset; } set { _isInCloset = value; } }
 
     void Start()
     {
@@ -38,6 +39,9 @@ public class PlayerInteraction : MonoBehaviour
                     break;
                 case Target.Enemy:
                     Assassinate(_playerController.CurrentTarget);
+                    break;
+                case Target.Object:
+                    _playerController.CurrentTarget.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
                     break;
             }
         }
@@ -117,11 +121,9 @@ public class PlayerInteraction : MonoBehaviour
         // 암살시 플레이어가 공격 범위 내에 있는지 확인
         if (distance < assassinRange)
         {
-            
-            float angleToEnemy = Vector3.SignedAngle(transform.up, directionToEnemy.normalized, Vector3.forward);
-            float angleDifference = Mathf.Abs(angleToEnemy);
-            // 각도 차이가 지정한 범위에 있는지 확인
-            if (angleDifference >= rotationThresholdMin && angleDifference <= rotationThresholdMax)
+            // 적 상태 확인
+            EnemyState enemyState = target.GetComponent<Enemy>().currentState;
+            if (enemyState != EnemyState.Chasing)
             {
                 Debug.Log("Assassination condition met");
                 return true;
@@ -133,6 +135,7 @@ public class PlayerInteraction : MonoBehaviour
     public void ShowEKeyUI(bool _isPlayerClose)
     {
         Canvas pressE_UI = _playerController.CurrentTarget?.transform.GetChild(0).GetComponent<Canvas>();
+        Debug.Log("ShowEKeyUI");
         if (pressE_UI == null) return;
         if (_isPlayerClose == true)
         {
@@ -143,6 +146,12 @@ public class PlayerInteraction : MonoBehaviour
             pressE_UI.enabled = false;
             _playerController.CurrentTarget = null;
         }
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.interactionAction -= PlayerInteractionAction;
+        InputManager.Instance.holdInteractionAction -= PlayerHoldInteractionAction;
     }
 }
 

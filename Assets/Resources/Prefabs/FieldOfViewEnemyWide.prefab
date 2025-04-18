@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1287313066097829503}
   - component: {fileID: 5687767163071430175}
   - component: {fileID: 8251910952314336379}
-  - component: {fileID: 4967255531341375547}
+  - component: {fileID: 5012788263784875801}
   - component: {fileID: 7612133791403312308}
   m_Layer: 8
   m_Name: FieldOfViewEnemyWide
@@ -88,7 +88,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4967255531341375547
+--- !u!114 &5012788263784875801
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8178410400162374663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3301fd9938777b2459507334ac24b190, type: 3}
+  m_Script: {fileID: 11500000, guid: 2722ec548c543ae429440ab1d33c9514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   layerMask:

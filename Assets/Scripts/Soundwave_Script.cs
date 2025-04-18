@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Define;
 public class Soundwave_Script : MonoBehaviour
 {
     [Header("Soundwave")]
@@ -64,7 +64,7 @@ public class Soundwave_Script : MonoBehaviour
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.currentState = Enemy.EnemyState.Checking;
+                enemy.currentState = EnemyState.Checking;
 
                 enemy.MoveToPlayerPosition();
             }

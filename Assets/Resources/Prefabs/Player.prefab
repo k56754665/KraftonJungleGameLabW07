@@ -310,6 +310,7 @@ Transform:
   - {fileID: 566483036620117666}
   - {fileID: 3113447339142891631}
   - {fileID: 4466018058602996274}
+  - {fileID: 8217263040402735889}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &8886664948003956292
@@ -387,8 +388,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6595a88281abf4985e9f342104950e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _targetType: 0
   deathParticle: {fileID: 5347658223564051670, guid: 122b11e1f441d714f89365a8423ccf9d, type: 3}
   fieldOfView: {fileID: 0}
+  _target: {fileID: 0}
   hp: 3
   maxHp: 3
 --- !u!114 &5213263641823448125
@@ -403,6 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c926b334a8aabbd40827b0e8037c1c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentGunType: 0
   gun: {fileID: 6462777158864582031}
   soundwaveBlueGun: {fileID: 2981080032049220416, guid: 9b4929e308b391d479b2eec0d1dbbee9, type: 3}
   soundwaveRedGun: {fileID: 2981080032049220416, guid: e8d65e7022c148a4993b9b3221ca8781, type: 3}
@@ -420,6 +424,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 366117d4d67c2854c870080ea9255271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSpeed: 10
+  _focusMoveSpeed: 2
   soundwaveWalk: {fileID: 2981080032049220416, guid: 1860c01d692ec444cb91d3ecc5ffcb56, type: 3}
   soundwaveRun: {fileID: 2981080032049220416, guid: 9d7f89421504afb43bd16a1fd1ed6347, type: 3}
 --- !u!114 &1514308600191625311
@@ -1562,3 +1568,84 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8542317438373611343
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8217263040402735889}
+  - component: {fileID: 5835790140870367577}
+  - component: {fileID: 310936562434957047}
+  m_Layer: 0
+  m_Name: InteractTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8217263040402735889
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542317438373611343}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7553293588983531643}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &5835790140870367577
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542317438373611343}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
+--- !u!114 &310936562434957047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542317438373611343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4ad682a037514b4286a856080597e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
