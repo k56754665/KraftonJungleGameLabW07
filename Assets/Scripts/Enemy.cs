@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     // 적 기본 총알
     [Header("Bullet")]
     public GameObject bulletPrefab;
-    public float bulletSpeed = 20f; 
+    public float bulletSpeed = 20f;
     public Transform gunPosition;
     public ParticleSystem BuleDamagedParticle;
     public ParticleSystem RedDamagedParticle;
@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
     public float searchingWalkPointRange;
     public float searchingTime;
     // Patroling
-    [Header("AI: Patroling")] 
+    [Header("AI: Patroling")]
     private Vector3 walkPoint;
     private bool isWalkPointSet;
 
@@ -81,6 +81,13 @@ public class Enemy : MonoBehaviour
     GameObject _soundwaveRunGameObject; // 생성된 게임 오브젝트
 
     Canvas _pressE_UI;
+
+    public Vector3 CurrentSoundwavePosition
+    {
+        get { return _currentSoundwavePosition; }
+        set { _currentSoundwavePosition = value; }
+    }
+    Vector3 _currentSoundwavePosition;
 
     private void Awake()
     {
@@ -401,7 +408,15 @@ public class Enemy : MonoBehaviour
     // TODO : 가장 최근 음파로 이동하는 함수
     public void MoveToCurrentSoundwave()
     {
+        if (_currentSoundwavePosition == null) return;
 
+        Vector3 soundwavePosition = _currentSoundwavePosition;
+
+        // 가장 최근 음파의 위치로 이동
+        agent.SetDestination(soundwavePosition);
+
+        // 이동 후 Searching 상태로 전환을 위해 상태를 Checking으로 설정
+        currentState = EnemyState.Checking;
     }
 
     /// <summary>

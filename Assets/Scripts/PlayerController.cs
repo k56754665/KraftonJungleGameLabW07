@@ -176,7 +176,6 @@ public class PlayerController : MonoBehaviour
 
             if (bullet.bulletColor == Bullet.BulletColor.Yellow)
             {
-                Debug.Log("Hit Bullet");
                 hp -= 1;
                 Instantiate(deathParticle, transform.position, transform.rotation);
             }
