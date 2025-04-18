@@ -80,6 +80,8 @@ public class Enemy : MonoBehaviour
     GameObject _soundwaveRun; // 프리팹
     GameObject _soundwaveRunGameObject; // 생성된 게임 오브젝트
 
+    Canvas _pressE_UI;
+
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
