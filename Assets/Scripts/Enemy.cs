@@ -117,7 +117,7 @@ public class Enemy : MonoBehaviour
         maxHp = hp;
 
         // 레이어 마스크 설정
-        layerMask = LayerMask.GetMask("Field Of View Object", "Smoke");
+        layerMask = LayerMask.GetMask("Field Of View Object", "Smoke", "Player");
 
         FOVStart();
     }

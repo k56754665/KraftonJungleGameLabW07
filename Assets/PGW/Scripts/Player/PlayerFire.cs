@@ -108,6 +108,7 @@ public class PlayerFire : MonoBehaviour
         _canvas.ShowCanImage();
         _canvas.TurnOff(_canvas.redGunUI);
         _canvas.TurnOff(_canvas.blueGunUI);
+        _canvas.TurnOff(_canvas.smokeBombUI);
     }
 
     public void PlayerGunFire()
