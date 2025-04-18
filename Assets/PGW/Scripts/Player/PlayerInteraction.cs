@@ -122,8 +122,8 @@ public class PlayerInteraction : MonoBehaviour
         if (distance < assassinRange)
         {
             // 적 상태 확인
-            Enemy.EnemyState enemyState = target.GetComponent<Enemy>().currentState;
-            if (enemyState == Enemy.EnemyState.Patrolling || enemyState == Enemy.EnemyState.Stunning)
+            EnemyState enemyState = target.GetComponent<Enemy>().currentState;
+            if (enemyState == EnemyState.Patrolling || enemyState == EnemyState.Stunning)
             {
                 Debug.Log("Assassination condition met");
                 return true;
@@ -135,6 +135,7 @@ public class PlayerInteraction : MonoBehaviour
     public void ShowEKeyUI(bool _isPlayerClose)
     {
         Canvas pressE_UI = _playerController.CurrentTarget?.transform.GetChild(0).GetComponent<Canvas>();
+        Debug.Log("ShowEKeyUI");
         if (pressE_UI == null) return;
         if (_isPlayerClose == true)
         {

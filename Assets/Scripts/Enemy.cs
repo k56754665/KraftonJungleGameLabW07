@@ -4,6 +4,7 @@ using CodeMonkey.Utils;
 using System.Collections.Generic;
 using System.Collections;
 using NavMeshPlus.Extensions;
+using Define;
 
 public class Enemy : MonoBehaviour
 {
@@ -48,14 +49,6 @@ public class Enemy : MonoBehaviour
     public NavMeshAgent agent;
     private AgentRotateSmooth2d agentRotate;
 
-    public enum EnemyState
-    {
-        Patrolling,
-        Chasing,
-        Searching,
-        Stunning,
-        Checking
-    }
     public EnemyState currentState = EnemyState.Patrolling;
 
     [Header("Enemy Speed")]
@@ -87,8 +80,6 @@ public class Enemy : MonoBehaviour
     GameObject _soundwaveRun; // 프리팹
     GameObject _soundwaveRunGameObject; // 생성된 게임 오브젝트
 
-    Canvas _pressE_UI;
-
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -98,9 +89,6 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        _pressE_UI = transform.GetChild(0).GetComponent<Canvas>();
-        _pressE_UI.enabled = false;
-
         // soundwaveRun Prefab 로드
         _soundwaveRun = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveRun");
 
