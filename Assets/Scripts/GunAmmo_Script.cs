@@ -7,7 +7,8 @@ public class GunAmmo_Script : MonoBehaviour
         Blue,
         Red
     }
-    GunAmmoColor currentGunAmmoColor;
+
+    [SerializeField] GunAmmoColor currentGunAmmoColor;
     PlayerFire _playerFire;
     Canvas_Script _canvas;
     public ParticleSystem GetYouParticle;
