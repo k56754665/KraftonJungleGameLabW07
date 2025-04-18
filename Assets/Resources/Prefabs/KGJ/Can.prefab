@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2770709581585563643}
   - component: {fileID: 3053555203654355060}
   - component: {fileID: 5033274860317734390}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Enemy UI Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -781930413
   m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &2770709581585563643
@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 9130817933396159863}
   - component: {fileID: 7910934807862019580}
   - component: {fileID: 8099494021125178888}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: E
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 7637355834844445073}
   - component: {fileID: 8325403323715011093}
   - component: {fileID: 732008136593639712}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +339,7 @@ GameObject:
   - component: {fileID: 6859810203780560092}
   - component: {fileID: 3292675060951857659}
   - component: {fileID: 45215567034294733}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: PressE
   m_TagString: Untagged
   m_Icon: {fileID: 0}

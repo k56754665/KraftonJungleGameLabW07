@@ -398,6 +398,12 @@ public class Enemy : MonoBehaviour
         currentState = EnemyState.Checking;
     }
 
+    // TODO : 가장 최근 음파로 이동하는 함수
+    public void MoveToCurrentSoundwave()
+    {
+
+    }
+
     /// <summary>
     /// 플레이어를 쫓는 함수
     /// </summary>
