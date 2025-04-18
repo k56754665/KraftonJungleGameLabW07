@@ -394,6 +394,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void MoveToPlayerPosition()
     {
+        if (player == null) return;
+
         Vector3 playerPosition = player.position; // 플레이어의 위치 가져오기
 
         // 적의 위치를 플레이어의 위치로 설정
