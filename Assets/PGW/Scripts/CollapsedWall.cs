@@ -9,6 +9,8 @@ public class CollapsedWall : MonoBehaviour
     Vector2 _wallPosition1;
     Vector2 _wallPosition2;
 
+    bool isMoveInWall = false; // 플레이어가 벽 안에 있는지 여부
+
     private void Start()
     {
         _playerController = GameObject.FindFirstObjectByType<PlayerController>();
@@ -19,6 +21,8 @@ public class CollapsedWall : MonoBehaviour
 
     public void Activate()
     {
+        if (isMoveInWall) return; // 이미 벽 안에 있는 경우
+        isMoveInWall = true; // 벽 안으로 이동 중
         _playerController.CurrentState = PlayerState.Interaction;
         _playerFire.CanFire = false;
 
@@ -54,5 +58,6 @@ public class CollapsedWall : MonoBehaviour
         _playerController.transform.position = targetPosition;
         _playerController.CurrentState = PlayerState.Walk;
         _playerFire.CanFire = true;
+        isMoveInWall = false; // 벽 안에서 나옴
     }
 }

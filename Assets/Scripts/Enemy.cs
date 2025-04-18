@@ -4,6 +4,7 @@ using CodeMonkey.Utils;
 using System.Collections.Generic;
 using System.Collections;
 using NavMeshPlus.Extensions;
+using Define;
 
 public class Enemy : MonoBehaviour
 {
@@ -48,14 +49,6 @@ public class Enemy : MonoBehaviour
     public NavMeshAgent agent;
     private AgentRotateSmooth2d agentRotate;
 
-    public enum EnemyState
-    {
-        Patrolling,
-        Chasing,
-        Searching,
-        Stunning,
-        Checking
-    }
     public EnemyState currentState = EnemyState.Patrolling;
 
     [Header("Enemy Speed")]

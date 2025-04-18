@@ -9,6 +9,15 @@ namespace Define
         Interaction
     }
 
+    public enum EnemyState
+    {
+        Patrolling,
+        Chasing,
+        Searching,
+        Stunning,
+        Checking
+    }
+
     public enum Target
     {
         None,
