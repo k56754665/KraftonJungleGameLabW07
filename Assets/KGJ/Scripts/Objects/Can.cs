@@ -3,7 +3,11 @@ using UnityEngine;
 
 public class Can : MonoBehaviour
 {
-    public bool IsThrowing => _isThrowing;
+    public bool IsThrowing
+    {
+        get { return _isThrowing; }
+        set { _isThrowing = value; }
+    }
     bool _isThrowing = false;
 
     PlayerFire _playerFire;
@@ -14,7 +18,7 @@ public class Can : MonoBehaviour
     void Start()
     {
         _playerFire = FindFirstObjectByType<PlayerFire>();
-        _soundWavePrefab = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveWalk");
+        _soundWavePrefab = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveRun");
     }
 
     public void Throw()
@@ -29,7 +33,6 @@ public class Can : MonoBehaviour
 
     public void Activate()
     {
-        Debug.Log("Activate");
         _playerFire.SetCurrentCan();
         Destroy(gameObject);
     }

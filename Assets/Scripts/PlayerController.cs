@@ -171,10 +171,12 @@ public class PlayerController : MonoBehaviour
         // 총알 맞기
         if (_collision.gameObject.CompareTag("Bullet"))
         {
+            
             Bullet bullet = _collision.gameObject.GetComponent<Bullet>();
 
             if (bullet.bulletColor == Bullet.BulletColor.Yellow)
             {
+                Debug.Log("Hit Bullet");
                 hp -= 1;
                 Instantiate(deathParticle, transform.position, transform.rotation);
             }

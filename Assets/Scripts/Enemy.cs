@@ -387,6 +387,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void MoveToPlayerPosition()
     {
+        if (player == null) return;
+
         Vector3 playerPosition = player.position; // 플레이어의 위치 가져오기
 
         // 적의 위치를 플레이어의 위치로 설정
@@ -394,6 +396,12 @@ public class Enemy : MonoBehaviour
 
         // 이동 후 Searching 상태로 전환을 위해 상태를 Checking으로 설정
         currentState = EnemyState.Checking;
+    }
+
+    // TODO : 가장 최근 음파로 이동하는 함수
+    public void MoveToCurrentSoundwave()
+    {
+
     }
 
     /// <summary>
