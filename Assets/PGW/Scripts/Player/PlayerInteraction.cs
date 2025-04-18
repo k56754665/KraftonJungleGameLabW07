@@ -123,7 +123,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             // 적 상태 확인
             EnemyState enemyState = target.GetComponent<Enemy>().currentState;
-            if (enemyState == EnemyState.Patrolling || enemyState == EnemyState.Stunning)
+            if (enemyState != EnemyState.Chasing)
             {
                 Debug.Log("Assassination condition met");
                 return true;
