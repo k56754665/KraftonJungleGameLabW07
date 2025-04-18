@@ -206,7 +206,8 @@ public class PlayerController : MonoBehaviour
         {
             _targetType = Target.Object;
             _target = collision.gameObject;
-            _target.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
+            if(_target)
+                _target.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
             Debug.Log("Object");
         }
     }
@@ -216,7 +217,8 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Object"))
         {
             _targetType = Target.None;
-            _target.GetComponentInChildren<EnemyUIController_Script>().HideUI();
+            if (_target) 
+                _target.GetComponentInChildren<EnemyUIController_Script>().HideUI();
             _target = null;
             Debug.Log("Exit Object");
         }
