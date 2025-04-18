@@ -1473,12 +1473,16 @@ MonoBehaviour:
   normalAngularSpeed: 30
   fastLinearSpeed: 7
   fastAngularSpeed: 200
-  zoneMovePoints: []
+  zoneMovePoints:
+  - {x: 17, y: 4, z: 0}
+  - {x: -3, y: 4, z: 0}
+  - {x: -3, y: 17, z: 0}
+  - {x: -3, y: 4, z: 0}
   isWalkingToZoneMovePoint: 0
   shootingInterval: 1
   attackRange: 15
   searchingWalkPointRange: 4
-  searchingTime: 9
+  searchingTime: 3
   enemyDialogue: {fileID: 168094059775817831}
 --- !u!50 &-8421688033606681487
 Rigidbody2D:

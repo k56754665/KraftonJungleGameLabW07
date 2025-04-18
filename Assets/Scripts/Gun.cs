@@ -15,7 +15,6 @@ public class Gun : MonoBehaviour
         float randomAngle = Random.Range(-_blueGunRandom, _blueGunRandom);
         StartCoroutine(flash());
         GameObject fire_bullet = Instantiate(blueBullet, transform.position, Quaternion.identity);
-        Debug.Log("발사");
         fire_bullet.GetComponent<Bullet>().from = transform.parent.gameObject.tag;
         fire_bullet.GetComponent<Bullet>().transform.rotation = transform.parent.rotation * Quaternion.Euler(0f, 0f, randomAngle + 180f);
     }
@@ -24,7 +23,6 @@ public class Gun : MonoBehaviour
     {
         float randomAngle = Random.Range(-_redGunRandom, _redGunRandom);
         StartCoroutine(flash());
-        Debug.Log("발사2");
         GameObject fire_bullet = Instantiate(redBullet, transform.position, Quaternion.Euler(0f, 0f, randomAngle));
         fire_bullet.GetComponent<Bullet>().from = transform.parent.gameObject.tag;
         fire_bullet.GetComponent<Bullet>().transform.rotation = transform.parent.rotation * Quaternion.Euler(0f, 0f, randomAngle + 180f);

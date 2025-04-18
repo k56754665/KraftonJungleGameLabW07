@@ -17,8 +17,6 @@ public class Bullet : MonoBehaviour
 
     GameObject soundwave;
 
-
-
     private void Start()
     {
         soundwave = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveWalk");
@@ -32,6 +30,11 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D _collision)
     {
+        if (_collision.gameObject.CompareTag("Player"))
+        {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
         if (_collision.gameObject.CompareTag("Field Of View Object"))
         {
             Instantiate(soundwave, transform.position, Quaternion.identity);
