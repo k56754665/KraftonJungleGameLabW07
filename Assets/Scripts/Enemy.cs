@@ -293,8 +293,8 @@ public class Enemy : MonoBehaviour
         FoVEnemy_Wide.FoVTurnOnOff(true);
         FoVEnemy_Long.FoVTurnOnOff(true);
 
-        Debug.Log($"FOV Wide Created: Position={fovObjectWide.transform.position}, LocalPosition={fovObjectWide.transform.localPosition}");
-        Debug.Log($"FOV Long Created: Position={fovObjectLong.transform.position}, LocalPosition={fovObjectLong.transform.localPosition}");
+        //Debug.Log($"FOV Wide Created: Position={fovObjectWide.transform.position}, LocalPosition={fovObjectWide.transform.localPosition}");
+        //Debug.Log($"FOV Long Created: Position={fovObjectLong.transform.position}, LocalPosition={fovObjectLong.transform.localPosition}");
     }
 
     /// <summary>
