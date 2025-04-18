@@ -154,4 +154,3 @@ public class PlayerInteraction : MonoBehaviour
         InputManager.Instance.holdInteractionAction -= PlayerHoldInteractionAction;
     }
 }
-

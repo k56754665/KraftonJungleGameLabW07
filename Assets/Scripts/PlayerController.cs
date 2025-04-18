@@ -199,7 +199,6 @@ public class PlayerController : MonoBehaviour
                 Instantiate(deathParticle, transform.position, transform.rotation);
             }
         }
-
         
         //환자 살리기
         if (_collision.gameObject.CompareTag("Patient"))
@@ -241,6 +240,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 현재 플레이어의 hp와 위치를 세이브 포인트에 저장하는 함수
     /// </summary>
+
     void SavePointPlayer()
     {
         SavePointManager.Instance.SaveHP = hp;
