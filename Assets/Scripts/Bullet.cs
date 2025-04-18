@@ -16,25 +16,22 @@ public class Bullet : MonoBehaviour
     public BulletColor bulletColor;
 
     GameObject soundwave;
+    Rigidbody2D rb;
 
     private void Start()
     {
         soundwave = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveWalk");
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        transform.position += transform.up * speed * Time.deltaTime;
+        rb.linearVelocity = transform.up * speed;
     }
 
 
     private void OnTriggerEnter2D(Collider2D _collision)
     {
-        if (_collision.gameObject.CompareTag("Player"))
-        {
-            gameObject.SetActive(false);
-            Destroy(gameObject);
-        }
         if (_collision.gameObject.CompareTag("Field Of View Object"))
         {
             Instantiate(soundwave, transform.position, Quaternion.identity);
