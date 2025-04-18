@@ -20,7 +20,6 @@ public class PlayerInteractTrigger : MonoBehaviour
             {
                 if (!can.IsThrowing)
                 {
-                    can.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
                     _playerController.CurrentTarget = can.gameObject;
                     _playerController.TargetType = Target.Object;
                 }
@@ -29,15 +28,4 @@ public class PlayerInteractTrigger : MonoBehaviour
         }
     }
 
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Object"))
-        {
-            Can can = collision.GetComponent<Can>();
-            if (can != null)
-            {
-                can.GetComponentInChildren<EnemyUIController_Script>().HideUI();
-            }
-        }
-    }
 }

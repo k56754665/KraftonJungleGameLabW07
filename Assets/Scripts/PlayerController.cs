@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     Canvas_Script _canvas;
     GameManager _gameManager;
     [SerializeField] GameObject _target;
+    [SerializeField] GameObject _lastTarget;
     PlayerMove _playerMove;
     PlayerInteraction _playerInteraction;
 
@@ -107,6 +108,23 @@ public class PlayerController : MonoBehaviour
                     Destroy(gameObject);
                 }
             }
+
+            if(_target != _lastTarget)
+            {
+                if(_lastTarget)
+                {
+                    _lastTarget.GetComponentInChildren<EnemyUIController_Script>().HideUI();
+                }
+            }
+            if (_target)
+            {
+                _lastTarget = _target;
+                _target.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
+            }
+            else
+            {
+                _lastTarget = null;
+            }
         }
 
         if(EnemyManager.Instance.CheckClosestEnemy())
@@ -200,14 +218,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Object"))
         {
             _targetType = Target.Object;
             _target = collision.gameObject;
-            if(_target)
-                _target.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
             Debug.Log("Object");
         }
     }
@@ -217,8 +233,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Object"))
         {
             _targetType = Target.None;
-            if (_target) 
-                _target.GetComponentInChildren<EnemyUIController_Script>().HideUI();
             _target = null;
             Debug.Log("Exit Object");
         }
