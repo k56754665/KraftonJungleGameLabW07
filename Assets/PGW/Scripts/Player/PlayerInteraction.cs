@@ -18,6 +18,7 @@ public class PlayerInteraction : MonoBehaviour
 
     //오브젝트 상호작용
     bool _isInCloset = false; // 플레이어가 옷장 안에 있는지 여부
+    public bool IsInCloset { get { return _isInCloset; } set { _isInCloset = value; } }
 
     void Start()
     {
@@ -43,13 +44,6 @@ public class PlayerInteraction : MonoBehaviour
                     _playerController.CurrentTarget.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
                     break;
             }
-        }
-        if (_isInCloset)
-        {
-            _isInCloset = false;
-
-            _playerController.CurrentState = PlayerState.Walk;
-            _playerController.CurrentTarget.SendMessage("Close", SendMessageOptions.DontRequireReceiver);
         }
     }
 
@@ -128,8 +122,8 @@ public class PlayerInteraction : MonoBehaviour
         if (distance < assassinRange)
         {
             // 적 상태 확인
-            Enemy.EnemyState enemyState = target.GetComponent<Enemy>().currentState;
-            if (enemyState == Enemy.EnemyState.Patrolling || enemyState == Enemy.EnemyState.Stunning)
+            EnemyState enemyState = target.GetComponent<Enemy>().currentState;
+            if (enemyState == EnemyState.Patrolling || enemyState == EnemyState.Stunning)
             {
                 Debug.Log("Assassination condition met");
                 return true;
@@ -141,6 +135,7 @@ public class PlayerInteraction : MonoBehaviour
     public void ShowEKeyUI(bool _isPlayerClose)
     {
         Canvas pressE_UI = _playerController.CurrentTarget?.transform.GetChild(0).GetComponent<Canvas>();
+        Debug.Log("ShowEKeyUI");
         if (pressE_UI == null) return;
         if (_isPlayerClose == true)
         {

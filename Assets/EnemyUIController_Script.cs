@@ -4,7 +4,6 @@ public class EnemyUIController_Script : MonoBehaviour
 {
     public Transform enemy; // 적의 Transform
     public Vector3 UIoffset = new Vector3(0, 150, 0); // 적으로부터의 오프셋
-
     Canvas _canvas;
 
     void Start()
@@ -21,7 +20,6 @@ public class EnemyUIController_Script : MonoBehaviour
     {
         _canvas.enabled = false;
     }
-
     void Update()
     {
         if (enemy == null) return;

@@ -127,9 +127,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-        void PlayerRun()
+    void PlayerRun()
     {
-        _currentState = PlayerState.Run;
+        if (!_playerInteraction.IsInCloset)
+            _currentState = PlayerState.Run;
     }
 
     void StopRun()
