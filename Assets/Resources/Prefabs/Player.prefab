@@ -406,6 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c926b334a8aabbd40827b0e8037c1c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentGunType: 0
   gun: {fileID: 6462777158864582031}
   soundwaveBlueGun: {fileID: 2981080032049220416, guid: 9b4929e308b391d479b2eec0d1dbbee9, type: 3}
   soundwaveRedGun: {fileID: 2981080032049220416, guid: e8d65e7022c148a4993b9b3221ca8781, type: 3}
@@ -1578,7 +1579,7 @@ GameObject:
   - component: {fileID: 8217263040402735889}
   - component: {fileID: 5835790140870367577}
   - component: {fileID: 310936562434957047}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: InteractTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

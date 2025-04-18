@@ -4,7 +4,7 @@ using Define;
 public class PlayerFire : MonoBehaviour
 {
     Canvas_Script _canvas;
-    GunType currentGunType;
+    public GunType currentGunType;
 
     [SerializeField] GameObject gun;
     [SerializeField] GameObject soundwaveBlueGun;
@@ -27,13 +27,14 @@ public class PlayerFire : MonoBehaviour
 
          _can = Resources.Load<GameObject>("Prefabs/KGJ/Can"); // Can Prefab 로드
 
-        currentGunType = GunType.BlueGun; // 초기 총 종류 설정
+        
         InputManager.Instance.fireAction += PlayerGunFire; // 총 발사
         InputManager.Instance.changeWeaponAction += CheckMouseWheel; // 총 변경
 
         SavePointManager.Instance.OnSaveEvent += SavePointFire;
         SavePointManager.Instance.OnLoadEvent += LoadSavePointFire;
 
+        currentGunType = GunType.BlueGun; // 초기 총 종류 설정
         _canFire = true; // 총 발사 가능 상태로 초기화
     }
 
@@ -60,7 +61,16 @@ public class PlayerFire : MonoBehaviour
     {
         // 총 종류를 변경 direction은 휠 방향을 의미
         int gunCount = System.Enum.GetValues(typeof(GunType)).Length;
-        currentGunType = (GunType)(((int)currentGunType + WheelDirection + gunCount) % gunCount);
+        if (currentGunType == GunType.BlueGun)
+        {
+            currentGunType = GunType.RedGun;
+        }
+        else if (currentGunType == GunType.RedGun)
+        {
+            currentGunType = GunType.BlueGun;
+        }
+        
+        //currentGunType = (GunType)(((int)currentGunType + WheelDirection + gunCount) % gunCount);
 
         // 현재 총 HUD 변경
         if (currentGunType == GunType.BlueGun)

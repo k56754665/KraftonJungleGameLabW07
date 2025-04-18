@@ -56,7 +56,7 @@ public class FieldOfViewEnemy_Script : MonoBehaviour
             else
             {
                 vertex = raycastHit2D.point - (Vector2)transform.position; // 월드 좌표 차이로 로컬 좌표 계산
-                Debug.Log($"Ray {i}: Hit={raycastHit2D.collider?.name}, Point={raycastHit2D.point}, Vertex={vertex}");
+                //Debug.Log($"Ray {i}: Hit={raycastHit2D.collider?.name}, Point={raycastHit2D.point}, Vertex={vertex}");
             }
             vertices[vertexIndex] = new Vector3(vertex.x, vertex.y, 0); // Z축 0으로 고정
 
@@ -73,7 +73,7 @@ public class FieldOfViewEnemy_Script : MonoBehaviour
             angle += angleIncrease; // 시계 방향
 
             Debug.DrawRay(transform.position, direction * viewDistance, Color.green, 0.1f);
-            Debug.Log($"Ray {i}: Angle={angle}, Direction={direction}");
+            //Debug.Log($"Ray {i}: Angle={angle}, Direction={direction}");
         }
 
         // Vertex 디버깅: 정점과 연결 선 시각화
@@ -97,9 +97,10 @@ public class FieldOfViewEnemy_Script : MonoBehaviour
         mesh.RecalculateNormals(); // 노멀 재계산으로 렌더링 문제 방지
 
         // 디버깅 로그
-        Debug.Log($"FOV Position: {transform.position}, LocalPosition: {transform.localPosition}, Origin: {origin}, " +
+        /*Debug.Log($"FOV Position: {transform.position}, LocalPosition: {transform.localPosition}, Origin: {origin}, " +
                   $"VertexCount: {vertices.Length}, FirstVertex: {vertices[1]}, LastVertex: {vertices[vertices.Length - 1]}, " +
                   $"StartingAngle: {startingAngle}, AngleIncrease: {angleIncrease}");
+        */
     }
 
     public void SetOrigin(Vector3 _origin)
@@ -112,7 +113,7 @@ public class FieldOfViewEnemy_Script : MonoBehaviour
         _aimDirection.Normalize();
         float angle = UtilsClass.GetAngleFromVectorFloat(_aimDirection);
         startingAngle = angle - fov / 2f;
-        Debug.Log($"AimDirection: {_aimDirection}, Angle: {angle}, StartingAngle: {startingAngle}, FOV: {fov}, EnemyRotationZ: {transform.eulerAngles.z}");
+        //Debug.Log($"AimDirection: {_aimDirection}, Angle: {angle}, StartingAngle: {startingAngle}, FOV: {fov}, EnemyRotationZ: {transform.eulerAngles.z}");
     }
 
 

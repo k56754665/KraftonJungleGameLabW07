@@ -1,4 +1,3 @@
-using Define;
 using System.Collections;
 using UnityEngine;
 
@@ -30,6 +29,7 @@ public class Can : MonoBehaviour
 
     public void Activate()
     {
+        Debug.Log("Activate");
         _playerFire.SetCurrentCan();
         Destroy(gameObject);
     }
