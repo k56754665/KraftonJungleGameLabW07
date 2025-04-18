@@ -31,5 +31,6 @@ namespace Define
         BlueGun,
         RedGun,
         Can,
+        SmokeBomb
     }
 }

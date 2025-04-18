@@ -16,6 +16,9 @@ public class FieldOfViewEnemy_Script : MonoBehaviour
 
     private void Start()
     {
+        int layer1 = LayerMask.GetMask("Field Of View Object");
+        int layer2 = LayerMask.GetMask("Smoke");
+        layerMask = layer1 | layer2;
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         origin = Vector3.zero;

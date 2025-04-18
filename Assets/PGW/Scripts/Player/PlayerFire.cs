@@ -11,10 +11,11 @@ public class PlayerFire : MonoBehaviour
     [SerializeField] GameObject soundwaveRedGun;
     GameObject _can; // Can Prefab
     GameObject _canObject;
+    GameObject _smokeBomb;
 
     public int blueGunNumber;
     public int redGunNumber;
-    
+    public int smokeBombNumber;
 
     bool _canFire; // 총 발사 가능 여부
     public bool CanFire { get { return _canFire; } set { _canFire = value; } }
@@ -25,9 +26,9 @@ public class PlayerFire : MonoBehaviour
         _canvas.UpdateGunNumber(_canvas.blueGunUINum, blueGunNumber);
         _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
 
-         _can = Resources.Load<GameObject>("Prefabs/KGJ/Can"); // Can Prefab 로드
+        _can = Resources.Load<GameObject>("Prefabs/KGJ/Can"); // Can Prefab 로드
+        _smokeBomb = Resources.Load<GameObject>("Prefabs/KGJ/SmokeBomb"); // 연막탄 Prefab 로드
 
-        
         InputManager.Instance.fireAction += PlayerGunFire; // 총 발사
         InputManager.Instance.changeWeaponAction += CheckMouseWheel; // 총 변경
 
@@ -67,16 +68,19 @@ public class PlayerFire : MonoBehaviour
         }
         else if (currentGunType == GunType.RedGun)
         {
+            currentGunType = GunType.SmokeBomb;
+        }
+        else if (currentGunType == GunType.SmokeBomb)
+        {
             currentGunType = GunType.BlueGun;
         }
-        
-        //currentGunType = (GunType)(((int)currentGunType + WheelDirection + gunCount) % gunCount);
 
         // 현재 총 HUD 변경
         if (currentGunType == GunType.BlueGun)
         {
             _canvas.HideCanImage();
             _canvas.TurnOff(_canvas.redGunUI);
+            _canvas.TurnOff(_canvas.smokeBombUI);
             _canvas.TurnOn(_canvas.blueGunUI);
             _canvas.UpdateGunNumber(_canvas.blueGunUINum, blueGunNumber);
         }
@@ -84,8 +88,17 @@ public class PlayerFire : MonoBehaviour
         {
             _canvas.HideCanImage();
             _canvas.TurnOff(_canvas.blueGunUI);
+            _canvas.TurnOff(_canvas.smokeBombUI);
             _canvas.TurnOn(_canvas.redGunUI);
             _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
+        }
+        else if (currentGunType == GunType.SmokeBomb)
+        {
+            _canvas.HideCanImage();
+            _canvas.TurnOff(_canvas.blueGunUI);
+            _canvas.TurnOff(_canvas.redGunUI);
+            _canvas.TurnOn(_canvas.smokeBombUI);
+            _canvas.UpdateGunNumber(_canvas.smokeBombUINum, smokeBombNumber);
         }
     }
 
@@ -104,14 +117,19 @@ public class PlayerFire : MonoBehaviour
 
         if (currentGunType == GunType.Can)
         {
-            // TODO : can을 던지는 로직
             _canObject = Instantiate(_can, transform.position + (-transform.up * 2f), transform.rotation);
             _canObject.GetComponent<Can>().Throw();
             _canvas.HideCanImage();
             currentGunType = GunType.BlueGun;
             _canvas.TurnOff(_canvas.redGunUI);
             _canvas.TurnOn(_canvas.blueGunUI);
-            _canvas.UpdateGunNumber(_canvas.blueGunUINum, blueGunNumber);
+        }
+        else if (currentGunType == GunType.SmokeBomb && smokeBombNumber > 0)
+        {
+            // TODO : 연막탄 발사 로직
+            _canObject = Instantiate(_smokeBomb, transform.position + (-transform.up * 2f), transform.rotation);
+            smokeBombNumber -= 1;
+            _canvas.UpdateGunNumber(_canvas.smokeBombUINum, smokeBombNumber);
         }
         else if (currentGunType == GunType.BlueGun && blueGunNumber > 0)
         {
@@ -127,6 +145,7 @@ public class PlayerFire : MonoBehaviour
             redGunNumber -= 1;
             _canvas.UpdateGunNumber(_canvas.redGunUINum, redGunNumber);
         }
+        
     }
 
     /// <summary>

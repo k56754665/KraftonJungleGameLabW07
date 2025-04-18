@@ -112,6 +112,9 @@ public class Enemy : MonoBehaviour
         _initPosition = transform.position;
         maxHp = hp;
 
+        // 레이어 마스크 설정
+        layerMask = LayerMask.GetMask("Field Of View Object", "Smoke");
+
         FOVStart();
     }
 
