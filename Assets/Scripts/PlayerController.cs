@@ -179,11 +179,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        _target = _collision.gameObject;
+        
         //환자 살리기
         if (_collision.gameObject.CompareTag("Patient"))
         {
             _targetType = Target.Patient;
+            _target = _collision.gameObject;
         }
     }
 
