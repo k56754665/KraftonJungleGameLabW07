@@ -37,12 +37,12 @@ public class Enemy : MonoBehaviour
     public float longViewDistance;
 
     // 시야각 UI 가져오기
-    [SerializeField] private FieldOfViewEnemyWide_Script fieldOfViewEnemyWide;
-    [SerializeField] private FieldOfViewEnemyLong_Script fieldOfViewEnemyLong;
-    [SerializeField] private FoVEnemyColor_Script fieldOfViewEnemyWideColor;
-    [SerializeField] private FoVEnemyColor_Script fieldOfViewEnemyLongColor;
-    public GameObject fieldOfViewEnemyPrefabWide;
-    public GameObject fieldOfViewEnemyPrefabLong;
+    [SerializeField] private FieldOfViewEnemy_Script FoVEnemy_Wide;
+    [SerializeField] private FieldOfViewEnemy_Script FoVEnemy_Long;
+    [SerializeField] private FoVEnemyColor_Script FoVEnemy_WideColor;
+    [SerializeField] private FoVEnemyColor_Script FoVEnemy_LongColor;
+    public GameObject FoVEnemy_WidePrefab;
+    public GameObject FoVEnemy_LongPrefab;
 
     // 인공지능
     [Header("Enemy AI")]
@@ -89,6 +89,10 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        // 적 암살 E UI 시작시 비활성화
+        _pressE_UI = transform.GetChild(0).GetComponent<Canvas>();
+        _pressE_UI.enabled = false;
+
         // soundwaveRun Prefab 로드
         _soundwaveRun = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveRun");
 
@@ -130,8 +134,8 @@ public class Enemy : MonoBehaviour
             case EnemyState.Patrolling:
                 ZoneMove();
                 ChangeSpeed(normalLinearSpeed, normalAngularSpeed);
-                fieldOfViewEnemyWideColor.ChangeFoVColor(fieldOfViewEnemyWideColor.white);
-                fieldOfViewEnemyLongColor.ChangeFoVColor(fieldOfViewEnemyLongColor.white);
+                FoVEnemy_WideColor.ChangeFoVColor(FoVEnemy_WideColor.white);
+                FoVEnemy_LongColor.ChangeFoVColor(FoVEnemy_LongColor.white);
                 break;
             case EnemyState.Checking:
                 // 목표 위치에 도달했는지 확인
@@ -141,22 +145,28 @@ public class Enemy : MonoBehaviour
                     StartCoroutine(SearchForPlayer(1f));
                 }
                 ChangeSpeed(fastLinearSpeed, fastAngularSpeed);
-                fieldOfViewEnemyWideColor.ChangeFoVColor(fieldOfViewEnemyWideColor.yellow);
-                fieldOfViewEnemyLongColor.ChangeFoVColor(fieldOfViewEnemyLongColor.yellow);
+                FoVEnemy_WideColor.ChangeFoVColor(FoVEnemy_WideColor.yellow);
+                FoVEnemy_LongColor.ChangeFoVColor(FoVEnemy_LongColor.yellow);
                 break;
             case EnemyState.Chasing:
                 AttackPlayer(wideFov, wideViewDistance, longFov, longViewDistance);
                 ChangeSpeed(fastLinearSpeed, fastAngularSpeed);
-                fieldOfViewEnemyWideColor.ChangeFoVColor(fieldOfViewEnemyWideColor.red);
-                fieldOfViewEnemyLongColor.ChangeFoVColor(fieldOfViewEnemyLongColor.red);
+                FoVEnemy_WideColor.ChangeFoVColor(FoVEnemy_WideColor.red);
+                FoVEnemy_LongColor.ChangeFoVColor(FoVEnemy_LongColor.red);
                 break;
             case EnemyState.Searching:
                 Searching();
                 ChangeSpeed(fastLinearSpeed, fastAngularSpeed);
-                fieldOfViewEnemyWideColor.ChangeFoVColor(fieldOfViewEnemyWideColor.yellow);
-                fieldOfViewEnemyLongColor.ChangeFoVColor(fieldOfViewEnemyLongColor.yellow);
+                FoVEnemy_WideColor.ChangeFoVColor(FoVEnemy_WideColor.yellow);
+                FoVEnemy_LongColor.ChangeFoVColor(FoVEnemy_LongColor.yellow);
                 break;
         }
+
+
+        // FOV가 Enemy의 자식으로 들어갔기 때문에 회전값을 Enemy 기준으로 맞춰 줌
+        // Lerp는 Quaternion이 0일때 급속도로 회전되는 버그 제거
+        FoVEnemy_Wide.transform.rotation = Quaternion.Lerp(Quaternion.identity, FoVEnemy_Wide.transform.rotation, 0.5f);
+        FoVEnemy_Long.transform.rotation = Quaternion.Lerp(Quaternion.identity, FoVEnemy_Long.transform.rotation, 0.5f);
     }
 
     private void OnTriggerEnter2D(Collider2D _collision)
@@ -209,6 +219,9 @@ public class Enemy : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 색깔 별 총알의 데미지를 결정하는 함수
+    /// </summary>
     public void DamagedBullet(string _color)
     {
         if (_color == "Blue")
@@ -224,65 +237,72 @@ public class Enemy : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// FOV를 생성하고, Position, Rotation을 적의 위치에 맞게 초기화하는 함수
+    /// </summary>
     public void FOVStart()
     {
         // Field of View Wide 오브젝트 생성
-        GameObject fovObjectWide = Instantiate(fieldOfViewEnemyPrefabWide, Vector2.zero, Quaternion.identity);
-        
-        // 임시 코드 
-        //fovObjectWide.transform.SetParent(transform); // 적의 자식으로 설정
-        //fovObjectWide.transform.localPosition = Vector3.zero; // 적의 위치에 맞게 설정
+        GameObject fovObjectWide = Instantiate(FoVEnemy_WidePrefab, transform.position, Quaternion.identity);
+        fovObjectWide.transform.SetParent(transform); // 적의 자식으로 설정
+        fovObjectWide.transform.localPosition = Vector3.zero; // 로컬 좌표 (0,0,0)
+        fovObjectWide.transform.localRotation = Quaternion.identity; // 회전 초기화
 
-        fieldOfViewEnemyWide = fovObjectWide.GetComponent<FieldOfViewEnemyWide_Script>();
-        fieldOfViewEnemyWideColor = fovObjectWide.GetComponent<FoVEnemyColor_Script>();
-        fieldOfViewEnemyWide.enemy = this; // Field of View에 자신을 참조하게 설정
-        fieldOfViewEnemyWideColor.enemy = this;
+        FoVEnemy_Wide = fovObjectWide.GetComponent<FieldOfViewEnemy_Script>();
+        FoVEnemy_WideColor = fovObjectWide.GetComponent<FoVEnemyColor_Script>();
+        FoVEnemy_Wide.enemy = this;
+        FoVEnemy_WideColor.enemy = this;
 
         // Field of View Long 오브젝트 생성
-        GameObject fovObjectLong = Instantiate(fieldOfViewEnemyPrefabLong, Vector2.zero, Quaternion.identity);
+        GameObject fovObjectLong = Instantiate(FoVEnemy_LongPrefab, transform.position, Quaternion.identity);
+        fovObjectLong.transform.SetParent(transform); // 적의 자식으로 설정
+        fovObjectLong.transform.localPosition = Vector3.zero; // 로컬 좌표 (0,0,0)
+        fovObjectLong.transform.localRotation = Quaternion.identity; // 회전 초기화
 
-        // 임시 코드 
-        //fovObjectLong.transform.SetParent(transform); // 적의 자식으로 설정
-        //fovObjectLong.transform.localPosition = Vector3.zero; // 적의 위치에 맞게 설정
+        FoVEnemy_Long = fovObjectLong.GetComponent<FieldOfViewEnemy_Script>();
+        FoVEnemy_LongColor = fovObjectLong.GetComponent<FoVEnemyColor_Script>();
+        FoVEnemy_Long.enemy = this;
+        FoVEnemy_LongColor.enemy = this;
 
-        fieldOfViewEnemyLong = fovObjectLong.GetComponent<FieldOfViewEnemyLong_Script>();
-        fieldOfViewEnemyLongColor = fovObjectLong.GetComponent<FoVEnemyColor_Script>();
-        fieldOfViewEnemyLong.enemy = this; // Field of View에 자신을 참조하게 설정
-        fieldOfViewEnemyLongColor.enemy = this;
+        // 시야각의 시작 위치 설정 (로컬 좌표 기준)
+        FoVEnemy_Wide.SetOrigin(Vector3.zero);
+        FoVEnemy_Long.SetOrigin(Vector3.zero);
 
-        // 시야각의 시작 위치와 회전 설정
-        fieldOfViewEnemyWide.SetOrigin(transform.position);
-        fieldOfViewEnemyWide.transform.rotation = transform.rotation; // 적과 같은 회전으로 설정
+        // Enemy에서 설정한 시야각과 시야범위 적용
+        FoVEnemy_Wide.fov = wideFov;
+        FoVEnemy_Wide.viewDistance = wideViewDistance;
+        FoVEnemy_Long.fov = longFov;
+        FoVEnemy_Long.viewDistance = longViewDistance;
 
-        // 시야각의 시작 위치와 회전 설정
-        fieldOfViewEnemyLong.SetOrigin(transform.position);
-        fieldOfViewEnemyLong.transform.rotation = transform.rotation; // 적과 같은 회전으로 설정
+        // MeshRenderer 활성화 확인
+        MeshRenderer wideRenderer = fovObjectWide.GetComponent<MeshRenderer>();
+        MeshRenderer longRenderer = fovObjectLong.GetComponent<MeshRenderer>();
+        if (wideRenderer != null) wideRenderer.enabled = true;
+        if (longRenderer != null) longRenderer.enabled = true;
 
-        // 시작시 시야각 활성화
-        fieldOfViewEnemyWide.FoVTurnOnOff(true);
-        fieldOfViewEnemyLong.FoVTurnOnOff(true);
+        // 시작 시 시야각 활성화
+        FoVEnemy_Wide.FoVTurnOnOff(true);
+        FoVEnemy_Long.FoVTurnOnOff(true);
+
+        Debug.Log($"FOV Wide Created: Position={fovObjectWide.transform.position}, LocalPosition={fovObjectWide.transform.localPosition}");
+        Debug.Log($"FOV Long Created: Position={fovObjectLong.transform.position}, LocalPosition={fovObjectLong.transform.localPosition}");
     }
 
+    /// <summary>
+    /// FOV를 적의 위치, 회전에 맞게 업데이트하는 함수
+    /// </summary>
     public void FOVUpdate()
     {
-        // 적의 현재 각도를 가져와 시야각을 업데이트
-        float currentAngle = transform.eulerAngles.z;
+        // Enemy 스프라이트가 위를 바라보고 있으므로 위를 기준으로
+        Vector3 aimDirection = transform.up; // 또는 transform.right (스프라이트 방향에 따라)
 
-        // 시야각의 시작과 끝 각도 계산
-        float wideFOVStartAngle = currentAngle - wideFov / 2;
-        float wideFOVEndAngle = currentAngle + wideFov / 2;
-        float longFOVStartAngle = currentAngle - longFov / 2;
-        float longFOVEndAngle = currentAngle + longFov / 2;
-
-        // Wide FOV 설정
-        fieldOfViewEnemyWide.SetAimDirection(UtilsClass.GetVectorFromAngle(wideFOVStartAngle + 90 + wideFov * 2 - wideFov / 2)); // 각도 보정 추가
-        fieldOfViewEnemyWide.SetOrigin(this.transform.position);
-
-        // Long FOV 설정
-        fieldOfViewEnemyLong.SetAimDirection(UtilsClass.GetVectorFromAngle(longFOVStartAngle + 90 + longFov * 2 - longFov / 2)); // 각도 보정 추가
-        fieldOfViewEnemyLong.SetOrigin(this.transform.position);
+        FoVEnemy_Wide.SetAimDirection(aimDirection);
+        FoVEnemy_Long.SetAimDirection(aimDirection);
     }
 
+    /// <summary>
+    /// 적의 이동 속도를 변경하는 함수
+    /// </summary>
     void ChangeSpeed(float _linearSpeed, float _angularSpeed)
     {
         agent.speed = _linearSpeed;
@@ -290,7 +310,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// 적의 시야각을 체크하여 플레이어를 발견했는지 확인합니다.
+    /// 적의 시야각을 체크하여 플레이어를 발견했는지 확인
     /// </summary>
     private void CheckFieldOfView(float _fov, float _viewDistance)
     {
@@ -327,15 +347,6 @@ public class Enemy : MonoBehaviour
                     // 장애물과의 거리로 Ray 길이 조정
                     //Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * hit.distance, UnityEngine.Color.red);
                 }
-                else
-                {
-                    //Debug.Log("플레이어가 아닌 오브젝트에 닿았습니다: " + hit.collider.name);
-                }
-            }
-            else
-            {
-                // 장애물에 부딪히지 않으면 원래 거리로 Ray그리기
-                //Debug.DrawRay(origin, UtilsClass.GetVectorFromAngle(angle) * _viewDistance, UnityEngine.Color.red);
             }
         }
     }
@@ -425,6 +436,9 @@ public class Enemy : MonoBehaviour
             isWalkPointSet = false;
     }
 
+    /// <summary>
+    /// 1초마다 랜덤한 walkPoint를 찾는 함수
+    /// </summary>
     void SearchWalkPoint()
     {
         // 범위 내 랜덤한 포인트 지정
@@ -527,6 +541,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 적이 스턴될 시, 이동을 멈추고 시야각을 끄는 함수
+    /// </summary>
     public void Stun()
     {
         isStunned = true;
@@ -534,8 +552,8 @@ public class Enemy : MonoBehaviour
         currentState = EnemyState.Stunning; // Stun 상태로 변경
 
         // 시야각 UI 끄기
-        fieldOfViewEnemyWide.FoVTurnOnOff(false);
-        fieldOfViewEnemyLong.FoVTurnOnOff(false);
+        FoVEnemy_Wide.FoVTurnOnOff(false);
+        FoVEnemy_Long.FoVTurnOnOff(false);
 
         Invoke("RecoverFromStun", stunDuration); // 일정 시간 후 Stun 해제
     }
@@ -551,18 +569,21 @@ public class Enemy : MonoBehaviour
         {
             // 적 비활성화
             gameObject.SetActive(false);
-            fieldOfViewEnemyPrefabWide.SetActive(false);
-            fieldOfViewEnemyPrefabLong.SetActive(false);
+            FoVEnemy_WidePrefab.SetActive(false);
+            FoVEnemy_LongPrefab.SetActive(false);
         }
         else
         {
             // 적 활성화
             gameObject.SetActive(true);
-            fieldOfViewEnemyPrefabWide.SetActive(true);
-            fieldOfViewEnemyPrefabLong.SetActive(true);
+            FoVEnemy_WidePrefab.SetActive(true);
+            FoVEnemy_LongPrefab.SetActive(true);
         }
     }
 
+    /// <summary>
+    /// 스턴 이후, Patrolling 상태로 복귀하는 함수
+    /// </summary>
     private void RecoverFromStun()
     {
         isStunned = false;
@@ -570,14 +591,14 @@ public class Enemy : MonoBehaviour
         currentState = EnemyState.Patrolling; // Patrolling 상태로 복귀
 
         // 시야각 UI 켜기
-        fieldOfViewEnemyWide.FoVTurnOnOff(true);
-        fieldOfViewEnemyLong.FoVTurnOnOff(true);
+        FoVEnemy_Wide.FoVTurnOnOff(true);
+        FoVEnemy_Long.FoVTurnOnOff(true);
     }
 
     public void EnemyDie()
     {
-        fieldOfViewEnemyWide.DestroyFOV();
-        fieldOfViewEnemyLong.DestroyFOV();
+        FoVEnemy_Wide.DestroyFOV();
+        FoVEnemy_Long.DestroyFOV();
         Instantiate(RedDamagedParticle, transform.position, transform.rotation);
 
         // TODO : Destroy 대신 SetActive(false)로 비활성화, EnemyManager의 딕셔너리에 사망 현황 업데이트
