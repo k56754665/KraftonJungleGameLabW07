@@ -1256,12 +1256,12 @@ MonoBehaviour:
   wideViewDistance: 5
   longFov: 25
   longViewDistance: 15
-  fieldOfViewEnemyWide: {fileID: 0}
-  fieldOfViewEnemyLong: {fileID: 0}
-  fieldOfViewEnemyWideColor: {fileID: 0}
-  fieldOfViewEnemyLongColor: {fileID: 0}
-  fieldOfViewEnemyPrefabWide: {fileID: 8178410400162374663, guid: d9aca60477b04754dac804af3e7f1988, type: 3}
-  fieldOfViewEnemyPrefabLong: {fileID: 8178410400162374663, guid: 5520b90de10a5f947a5318b0af3e882f, type: 3}
+  FoVEnemy_Wide: {fileID: 0}
+  FoVEnemy_Long: {fileID: 0}
+  FoVEnemy_WideColor: {fileID: 0}
+  FoVEnemy_LongColor: {fileID: 0}
+  FoVEnemy_WidePrefab: {fileID: 8178410400162374663, guid: d9aca60477b04754dac804af3e7f1988, type: 3}
+  FoVEnemy_LongPrefab: {fileID: 8178410400162374663, guid: 5520b90de10a5f947a5318b0af3e882f, type: 3}
   agent: {fileID: 0}
   currentState: 0
   normalLinearSpeed: 3

@@ -1,7 +1,7 @@
 using UnityEngine;
 using CodeMonkey.Utils;
 
-public class FieldOfViewEnemyLong_Script : MonoBehaviour
+public class FieldOfViewEnemy_Script : MonoBehaviour
 {
     [SerializeField] private LayerMask layerMask;
 
