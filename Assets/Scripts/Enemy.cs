@@ -76,6 +76,10 @@ public class Enemy : MonoBehaviour
     private Vector3 walkPoint;
     private bool isWalkPointSet;
 
+    // 적 대사창
+    [Header("Dialogue UI")]
+    [SerializeField] private EnemyDialogue enemyDialogue;
+
     Vector3 _initPosition;
     GameObject _soundwaveRun; // 프리팹
     GameObject _soundwaveRunGameObject; // 생성된 게임 오브젝트
@@ -123,8 +127,13 @@ public class Enemy : MonoBehaviour
             return;
         }
 
+        // 적 대사 변경
+        enemyDialogue.DialogueTalking(currentState);
+
+        // 가짜 시야각 UI(빛살) 위치 업데이트
         FOVUpdate();
 
+        // 실제 시야각 레이캐스트 확인
         CheckFieldOfView(wideFov, wideViewDistance);
         CheckFieldOfView(longFov, longViewDistance);
 
