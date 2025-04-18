@@ -105,7 +105,7 @@ public class PlayerFire : MonoBehaviour
         if (currentGunType == GunType.Can)
         {
             // TODO : can을 던지는 로직
-            _canObject = Instantiate(_can, transform.position, transform.rotation);
+            _canObject = Instantiate(_can, transform.position + (-transform.up * 2f), transform.rotation);
             _canObject.GetComponent<Can>().Throw();
             _canvas.HideCanImage();
             currentGunType = GunType.BlueGun;
