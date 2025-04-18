@@ -18,6 +18,7 @@ public class PlayerInteraction : MonoBehaviour
 
     //오브젝트 상호작용
     bool _isInCloset = false; // 플레이어가 옷장 안에 있는지 여부
+    public bool IsInCloset { get { return _isInCloset; } set { _isInCloset = value; } }
 
     void Start()
     {
@@ -43,13 +44,6 @@ public class PlayerInteraction : MonoBehaviour
                     _playerController.CurrentTarget.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
                     break;
             }
-        }
-        if (_isInCloset)
-        {
-            _isInCloset = false;
-
-            _playerController.CurrentState = PlayerState.Walk;
-            _playerController.CurrentTarget.SendMessage("Close", SendMessageOptions.DontRequireReceiver);
         }
     }
 
