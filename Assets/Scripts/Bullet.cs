@@ -15,10 +15,14 @@ public class Bullet : MonoBehaviour
 
     public BulletColor bulletColor;
 
+    GameObject soundwave;
 
 
 
-
+    private void Start()
+    {
+        soundwave = Resources.Load<GameObject>("Prefabs/Soundwaves/SoundwaveWalk");
+    }
 
     void Update()
     {
@@ -30,6 +34,7 @@ public class Bullet : MonoBehaviour
     {
         if (_collision.gameObject.CompareTag("Field Of View Object"))
         {
+            Instantiate(soundwave, transform.position, Quaternion.identity);
             //Debug.Log("Hit Wall");
             Destroy(gameObject);
         }
