@@ -71,6 +71,7 @@ public class Enemy : MonoBehaviour
     [Header("AI: Searching")]
     public float searchingWalkPointRange;
     public float searchingTime;
+    private float serchingCountTimer;
     // Patroling
     [Header("AI: Patroling")]
     private Vector3 walkPoint;
@@ -207,7 +208,7 @@ public class Enemy : MonoBehaviour
                 else if (bullet.bulletColor == Bullet.BulletColor.Red)
                 {
                     DamagedBullet("Red");
-                    currentState = EnemyState.Searching;
+                    StartSearching();
                 }
             }
             // 적이 주변을 살피거나 이미 쫓아갈 때는 두 총 -> 모두 쫓아가기
@@ -438,8 +439,7 @@ public class Enemy : MonoBehaviour
         // 마지막 위치에 도착했는지 확인
         if (Vector3.Distance(transform.position, lastPlayerPosition) < 1f)
         {
-            currentState = EnemyState.Searching;
-            Invoke(nameof(ReturnToPatrolling), searchingTime); // searchingTime 대기 후 패트롤 상태로 돌아가기
+            StartSearching(); // Searching 상태로 전환
         }
     }
 
@@ -448,9 +448,32 @@ public class Enemy : MonoBehaviour
         currentState = EnemyState.Patrolling; // 다시 패트롤 상태로 변경
     }
 
+    /// <summary>
+    /// Searrcing 상태로 전환되는 모든 경우에서 serchingCountTimer를 초기화하는 함수
+    /// </summary>
+    void StartSearching()
+    {
+        currentState = EnemyState.Searching;
+        serchingCountTimer = searchingTime; // 타이머 초기화
+        isWalkPointSet = false; // walkPoint 초기화
+    }
+
 
     void Searching()
     {
+        // 타이머 감소
+        serchingCountTimer -= Time.deltaTime;
+
+        // 타이머가 0 이하일 경우, 다시 패트롤 상태로 돌아감
+        if (serchingCountTimer <= 0f)
+        {
+            currentState = EnemyState.Patrolling;
+            isWalkPointSet = false; // walkPoint 초기화
+            serchingCountTimer = searchingTime; // 타이머 초기화
+            return;
+        }
+
+
         if (!isWalkPointSet)
         {
             SearchWalkPoint();
@@ -537,8 +560,7 @@ public class Enemy : MonoBehaviour
         // 잠시 대기 (예: 1초)
         yield return new WaitForSeconds(_waitSecond);
 
-        // Searching 상태로 전환
-        currentState = EnemyState.Searching;
+        StartSearching();
     }
 
 
