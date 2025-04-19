@@ -5,7 +5,8 @@ public class PlayerMove : MonoBehaviour
 {
     Rigidbody2D _rb;
     PlayerController _playerController;
-    
+    Animator _animator;
+
     [SerializeField] float _moveSpeed = 10f;
     [SerializeField] float _focusMoveSpeed = 2f;
     Vector2 _moveDir;
@@ -21,6 +22,7 @@ public class PlayerMove : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _playerController = GetComponent<PlayerController>();
+        _animator = GetComponent<Animator>();
     }
 
     public void Move()
@@ -30,6 +32,7 @@ public class PlayerMove : MonoBehaviour
         // 음파 생성 조건
         if (_moveDir != Vector2.zero)
         {
+            _animator.SetBool("isMoving", true);
             if (InputManager.Instance.IsFocusing)
             {
                 _rb.linearVelocity = _moveDir.normalized * _focusMoveSpeed * _playerController.RunMultiply;
@@ -50,6 +53,7 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
+            _animator.SetBool("isMoving", false);
             _rb.linearVelocity = Vector2.zero; // 방향 없을 때 속도 0
         }
     }

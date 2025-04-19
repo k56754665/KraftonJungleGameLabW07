@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject _lastTarget;
     PlayerMove _playerMove;
     PlayerInteraction _playerInteraction;
+    SpriteRenderer _spriteRenderer;
+    Animator _animator;
 
     public int hp;
     public int maxHp;
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
         _canvas = GameObject.FindFirstObjectByType<Canvas_Script>();
         _playerMove = GetComponent<PlayerMove>();
         _playerInteraction = GetComponent<PlayerInteraction>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
         InputManager.Instance.runAction += PlayerRun;
         InputManager.Instance.stopRunAction += StopRun;
 
@@ -82,7 +86,8 @@ public class PlayerController : MonoBehaviour
             Vector3 mousePosition = InputManager.Instance.PointerMoveInput;
             Vector2 direction = (mousePosition - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
+            //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
+            _spriteRenderer.flipX = direction.x < 0;
 
             // 플레이어 위치, 각도와 Field of View 위치, 각도 동기화
             fieldOfView.SetAimDirection(UtilsClass.GetVectorFromAngle(angle + 90));
