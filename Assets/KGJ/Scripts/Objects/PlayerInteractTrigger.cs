@@ -28,4 +28,18 @@ public class PlayerInteractTrigger : MonoBehaviour
         }
     }
 
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Object"))
+        {
+            // Object에 Can 스크립트가 있다면
+            Can can = collision.GetComponent<Can>();
+            if (can != null)
+            {
+                _playerController.CurrentTarget = null;
+            }
+
+        }
+    }
+
 }
