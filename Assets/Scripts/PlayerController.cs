@@ -25,8 +25,7 @@ public class PlayerController : MonoBehaviour
     public Target TargetType { get { return _targetType; } set { _targetType = value; } }
     public GameObject CurrentTarget { get { return _target; } set { _target = value; } }
     public float RunMultiply => runMultiply;
-       
-
+      
 
     void Start()
     {
@@ -109,9 +108,12 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            // TODO : closet에 들어가면 타겟 변경하지 않도록함
+            if (_playerInteraction.IsInCloset) return;
+
             if(_target != _lastTarget)
             {
-                if(_lastTarget)
+                if (_lastTarget)
                 {
                     _lastTarget.GetComponentInChildren<EnemyUIController_Script>().HideUI();
                 }
@@ -132,7 +134,6 @@ public class PlayerController : MonoBehaviour
             GameObject closestEnemy = EnemyManager.Instance.CheckClosestEnemy();
             if(_playerInteraction.CheckAssassinateCondition(closestEnemy))
             {
-                Debug.Log("Assassination condition met");
                 _targetType = Target.Enemy;
                 _target = closestEnemy;
                 _playerInteraction.ShowEKeyUI(true);

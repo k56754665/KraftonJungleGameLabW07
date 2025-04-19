@@ -21,6 +21,8 @@ public class Closet : MonoBehaviour
     {
         if (_isMoveInCloset) return; // 이미 옷장 안에 있는 경우
         _isMoveInCloset = true; // 옷장 안으로 이동 중
+        
+
         // 목표 위치 설정
         Vector2 targetPosition;
         if (!_playerInteraction.IsInCloset)
@@ -36,8 +38,8 @@ public class Closet : MonoBehaviour
             targetPosition = transform.position + transform.up * 3f;
             _playerInteraction.IsInCloset = false;
         }
-            // 코루틴으로 부드러운 이동 시작
-            StartCoroutine(MovePlayerSmoothly(targetPosition));
+        // 코루틴으로 부드러운 이동 시작
+        StartCoroutine(MovePlayerSmoothly(targetPosition));
     }
 
     IEnumerator MovePlayerSmoothly(Vector2 targetPosition)
@@ -62,12 +64,15 @@ public class Closet : MonoBehaviour
             _playerController.CurrentState = PlayerState.Walk;
             _playerController.GetComponent<CircleCollider2D>().enabled = true;
             _playerFire.CanFire = true;
+            _playerInteraction.IsInCloset = false;
         }
         else 
         {
             _playerController.CurrentTarget = transform.gameObject;
             _playerController.TargetType = Target.Object;
+            _playerInteraction.IsInCloset = true;
         }
         _isMoveInCloset = false; // 이동 완료
+        
     }
 }

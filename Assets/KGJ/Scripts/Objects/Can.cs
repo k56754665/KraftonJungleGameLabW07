@@ -27,8 +27,8 @@ public class Can : MonoBehaviour
         if (_throwingCoroutine == null)
             _throwingCoroutine = StartCoroutine(Throwing());
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.AddForce(-transform.up * 10f, ForceMode2D.Impulse);
-        rb.AddTorque(100f, ForceMode2D.Impulse);
+        rb.AddForce(-transform.up * 20f, ForceMode2D.Impulse);
+        rb.AddTorque(5f, ForceMode2D.Impulse);
     }
 
     public void Activate()
