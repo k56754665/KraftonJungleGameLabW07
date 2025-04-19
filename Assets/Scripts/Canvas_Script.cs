@@ -10,8 +10,10 @@ public class Canvas_Script : MonoBehaviour
     public GameObject staminaBar;
     public GameObject blueGunUI;
     public GameObject redGunUI;
+    public GameObject smokeBombUI;
     public TextMeshProUGUI blueGunUINum;
     public TextMeshProUGUI redGunUINum;
+    public TextMeshProUGUI smokeBombUINum;
 
     Image _canImage;
 

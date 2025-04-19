@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     Canvas_Script _canvas;
     GameManager _gameManager;
     [SerializeField] GameObject _target;
+    [SerializeField] GameObject _lastTarget;
     PlayerMove _playerMove;
     PlayerInteraction _playerInteraction;
 
@@ -24,8 +25,7 @@ public class PlayerController : MonoBehaviour
     public Target TargetType { get { return _targetType; } set { _targetType = value; } }
     public GameObject CurrentTarget { get { return _target; } set { _target = value; } }
     public float RunMultiply => runMultiply;
-       
-
+      
 
     void Start()
     {
@@ -107,6 +107,26 @@ public class PlayerController : MonoBehaviour
                     Destroy(gameObject);
                 }
             }
+
+            // TODO : closet에 들어가면 타겟 변경하지 않도록함
+            if (_playerInteraction.IsInCloset) return;
+
+            if(_target != _lastTarget)
+            {
+                if (_lastTarget)
+                {
+                    _lastTarget.GetComponentInChildren<EnemyUIController_Script>().HideUI();
+                }
+            }
+            if (_target)
+            {
+                _lastTarget = _target;
+                _target.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
+            }
+            else
+            {
+                _lastTarget = null;
+            }
         }
 
         if(EnemyManager.Instance.CheckClosestEnemy())
@@ -114,7 +134,6 @@ public class PlayerController : MonoBehaviour
             GameObject closestEnemy = EnemyManager.Instance.CheckClosestEnemy();
             if(_playerInteraction.CheckAssassinateCondition(closestEnemy))
             {
-                Debug.Log("Assassination condition met");
                 _targetType = Target.Enemy;
                 _target = closestEnemy;
                 _playerInteraction.ShowEKeyUI(true);
@@ -176,11 +195,13 @@ public class PlayerController : MonoBehaviour
 
             if (bullet.bulletColor == Bullet.BulletColor.Yellow)
             {
+                Debug.Log("bullet");
+                _collision.gameObject.SetActive(false);
+                Destroy(_collision.gameObject);
                 hp -= 1;
                 Instantiate(deathParticle, transform.position, transform.rotation);
             }
         }
-
         
         //환자 살리기
         if (_collision.gameObject.CompareTag("Patient"))
@@ -199,14 +220,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Object"))
         {
             _targetType = Target.Object;
             _target = collision.gameObject;
-            if(_target)
-                _target.GetComponentInChildren<EnemyUIController_Script>().ShowUI();
             Debug.Log("Object");
         }
     }
@@ -216,8 +235,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Object"))
         {
             _targetType = Target.None;
-            if (_target) 
-                _target.GetComponentInChildren<EnemyUIController_Script>().HideUI();
             _target = null;
             Debug.Log("Exit Object");
         }
@@ -226,6 +243,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 현재 플레이어의 hp와 위치를 세이브 포인트에 저장하는 함수
     /// </summary>
+
     void SavePointPlayer()
     {
         SavePointManager.Instance.SaveHP = hp;

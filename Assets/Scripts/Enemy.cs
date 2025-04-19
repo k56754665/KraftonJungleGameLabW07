@@ -76,18 +76,22 @@ public class Enemy : MonoBehaviour
     private Vector3 walkPoint;
     private bool isWalkPointSet;
 
+    // 적 대사창
+    [Header("Dialogue UI")]
+    [SerializeField] private EnemyDialogue enemyDialogue;
+
     Vector3 _initPosition;
     GameObject _soundwaveRun; // 프리팹
     GameObject _soundwaveRunGameObject; // 생성된 게임 오브젝트
 
     Canvas _pressE_UI;
 
-    public Vector3 CurrentSoundwavePosition
+    public Vector3 SoundwavePosition
     {
-        get { return _currentSoundwavePosition; }
-        set { _currentSoundwavePosition = value; }
+        get { return _soundwavePosition; }
+        set { _soundwavePosition = value; }
     }
-    Vector3 _currentSoundwavePosition;
+    Vector3 _soundwavePosition;
 
     private void Awake()
     {
@@ -112,6 +116,9 @@ public class Enemy : MonoBehaviour
         _initPosition = transform.position;
         maxHp = hp;
 
+        // 레이어 마스크 설정
+        layerMask = LayerMask.GetMask("Field Of View Object", "Smoke", "Player");
+
         FOVStart();
     }
 
@@ -123,8 +130,13 @@ public class Enemy : MonoBehaviour
             return;
         }
 
+        // 적 대사 변경
+        enemyDialogue.DialogueTalking(currentState);
+
+        // 가짜 시야각 UI(빛살) 위치 업데이트
         FOVUpdate();
 
+        // 실제 시야각 레이캐스트 확인
         CheckFieldOfView(wideFov, wideViewDistance);
         CheckFieldOfView(longFov, longViewDistance);
 
@@ -408,15 +420,9 @@ public class Enemy : MonoBehaviour
     // TODO : 가장 최근 음파로 이동하는 함수
     public void MoveToCurrentSoundwave()
     {
-        if (_currentSoundwavePosition == null) return;
+        agent.SetDestination(_soundwavePosition); // 음파 위치로 이동
 
-        Vector3 soundwavePosition = _currentSoundwavePosition;
-
-        // 가장 최근 음파의 위치로 이동
-        agent.SetDestination(soundwavePosition);
-
-        // 이동 후 Searching 상태로 전환을 위해 상태를 Checking으로 설정
-        currentState = EnemyState.Checking;
+        currentState = EnemyState.Checking; // 상태를 Checking으로 변경
     }
 
     /// <summary>

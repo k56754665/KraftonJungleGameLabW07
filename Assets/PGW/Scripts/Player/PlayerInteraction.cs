@@ -17,7 +17,7 @@ public class PlayerInteraction : MonoBehaviour
     float assassinRange = 3f; // 공격 범위
 
     //오브젝트 상호작용
-    bool _isInCloset = false; // 플레이어가 옷장 안에 있는지 여부
+    [SerializeField] bool _isInCloset = false; // 플레이어가 옷장 안에 있는지 여부
     public bool IsInCloset { get { return _isInCloset; } set { _isInCloset = value; } }
 
     void Start()
@@ -108,8 +108,12 @@ public class PlayerInteraction : MonoBehaviour
     //적 암살
     void Assassinate(GameObject target)
     {
-        target.GetComponent<Enemy>().EnemyDie();
-        Instantiate(_healParticle, transform.position, transform.rotation);
+        if (_isInCloset) return;
+        if (CheckAssassinateCondition(target))
+        {
+            target.GetComponent<Enemy>().EnemyDie();
+            Instantiate(_healParticle, transform.position, transform.rotation);
+        }
     }
 
     public bool CheckAssassinateCondition(GameObject target)
@@ -125,7 +129,6 @@ public class PlayerInteraction : MonoBehaviour
             EnemyState enemyState = target.GetComponent<Enemy>().currentState;
             if (enemyState != EnemyState.Chasing)
             {
-                Debug.Log("Assassination condition met");
                 return true;
             }
         }
@@ -154,4 +157,3 @@ public class PlayerInteraction : MonoBehaviour
         InputManager.Instance.holdInteractionAction -= PlayerHoldInteractionAction;
     }
 }
-

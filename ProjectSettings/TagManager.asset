@@ -13,6 +13,7 @@ TagManager:
   - Field Of View Object
   - GunAmmo
   - Object
+  - Smoke
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Black
   - Soundwave
   - Player
-  - 
+  - Smoke
   - 
   - 
   - 
