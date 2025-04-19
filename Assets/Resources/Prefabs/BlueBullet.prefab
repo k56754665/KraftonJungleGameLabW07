@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ab792c84adc6f4991df67fbd97ca63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 150
+  speed: 90
   direction: {x: 0, y: 0, z: 0}
   from: 
   bulletColor: 1
